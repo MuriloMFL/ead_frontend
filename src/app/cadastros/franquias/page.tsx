@@ -1,6 +1,4 @@
 'use client'; 
-
-import estilo from './page.module.scss';
 import estiloGlobal from '../../page.module.scss';
 import { Header } from '@/app/dashboard/componentes/header';
 import { api } from '@/servicos/api';
@@ -8,6 +6,8 @@ import { getCookieServer } from '@/lib/cookieServidor';
 import { FranquiaProps } from '@/lib/franquia.type';
 import { useState, useEffect} from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+import { Footer } from '@/app/dashboard/componentes/footer';
 
 async function buscarFranquias(filtros: { status?: boolean; nome?: string; responsavel?: string }): Promise<FranquiaProps[]> {
   try {
@@ -29,12 +29,12 @@ async function buscarFranquias(filtros: { status?: boolean; nome?: string; respo
 }
 
 export default function CadastrarFranquias() {
-  
+
   const [status, setStatus] = useState<string>('true');
   const [nome, setNome] = useState<string>('');
   const [franquias, setFranquias] = useState<FranquiaProps[]>([]);
-
-  // Função para lidar com o envio do formulário
+  const [idFranquia, setIdFranquia] = useState<string | null>(null);
+  
   const handleBuscar = async () => {
     const filtros = {
       status: status === 'true' ? true : status === 'false' ? false : undefined,
@@ -44,19 +44,24 @@ export default function CadastrarFranquias() {
     const resultado = await buscarFranquias(filtros);
     setFranquias(resultado);
   };
+
   useEffect(() => {
     handleBuscar(); 
   }, []);
 
+  const handleAlterar = async (id_franquia: number) => {
+    document.cookie = `id_franquia=${id_franquia}; path=/; max-age=86400;`;
+    router.push("/cadastros/franquias/incluir");
+  }
+
   const handleExcluir = async (id_franquia: number) => {
-    if (!confirm('Tem certeza de que deseja inativar esta franquia?')) {
+    if (!confirm('Tem certeza de que deseja Trocar o status esta franquia?')) {
       return;
     }
     try {
       const token = await getCookieServer();
-      console.log('ID enviado:', id_franquia);
       await api.put(
-        '/inativarfranquia',
+        '/trocarstatusfranquia',
         { id_franquia },
         {
           headers: {
@@ -64,17 +69,18 @@ export default function CadastrarFranquias() {
           },
         }
       );
-      console.log('ID enviado:', id_franquia);
-      alert('Franquia inativada com sucesso!');
+      toast.success('Status da Franquia trocado com sucesso!');
       handleBuscar();
     } catch (err) {
-      console.error('Erro ao inativar franquia:', err);
-      alert('Erro ao inativar a franquia. Tente novamente.');
+      toast.error('Erro ao trocar status da franquia. Tente novamente.');
     }
   };
 
   const router = useRouter();
-  const Incluir = async() =>{
+
+  const Incluir = () =>{
+    document.cookie = "id_franquia=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    setIdFranquia(null);
     router.push('/cadastros/franquias/incluir');
   }
 
@@ -86,14 +92,14 @@ export default function CadastrarFranquias() {
           <h1>Cadastro de Franquias</h1>
         </div>
 
-        <form className={estiloGlobal.barraFuncoes} onSubmit={(e) => { e.preventDefault(); handleBuscar(); }}>
+          <div className={estiloGlobal.barraFuncoes}>
           <div>
             <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={Incluir}>
               Incluir
             </button>
-            <button className={`${estiloGlobal.btn} ${estiloGlobal.imprimir}`}>Imprimir</button>
+            <button className={`${estiloGlobal.btn} ${estiloGlobal.imprimir}`} onClick={() => window.print()}>Imprimir</button>
           </div>
-
+          <form  onSubmit={(e) => { e.preventDefault(); handleBuscar(); }}>
           <div>
             <select 
               className={estiloGlobal.inputPesquisaSelect} 
@@ -113,6 +119,7 @@ export default function CadastrarFranquias() {
             <button type="submit" className={estiloGlobal.btn}>Buscar</button>
           </div>
         </form>
+        </div>
 
         <section className={estiloGlobal.grid}>
           <table>
@@ -122,7 +129,7 @@ export default function CadastrarFranquias() {
                 <th scope="col">Franquia</th>
                 <th scope="col">Responsável</th>
                 <th scope="col">Telefone</th>
-                <th scope="col">Ações</th>
+                <th scope="col" className="acoes">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -133,10 +140,16 @@ export default function CadastrarFranquias() {
                   <td data-label="Responsável">{item.responsavel}</td>
                   <td data-label="Telefone">{item.telefone}</td>
                   <td>
-                    <button className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`}>Alterar</button>
-                    <button className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`} 
-                            onClick={() => handleExcluir(Number(item.id_franquia))}
-                    >Excluir</button>
+                    <button 
+                        className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
+                        onClick={() => handleAlterar(Number(item.id_franquia))}
+                        >Alterar
+                    </button>
+                    <button 
+                        className={`${estiloGlobal.btn} ${item.status ? estiloGlobal.excluir : estiloGlobal.incluir}`}
+                        onClick={() => handleExcluir(Number(item.id_franquia))}
+                        >{item.status ? "Excluir" : "Ativar"}
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -144,6 +157,7 @@ export default function CadastrarFranquias() {
           </table>
         </section>
       </main>
+
     </>
   );
 }

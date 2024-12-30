@@ -5,6 +5,7 @@ import { api }  from "@/servicos/api";
 import { Header } from "../dashboard/componentes/header";
 
 export default function cadastrarusuario(){
+    
     async function handleRegistrarUsuario(formData: FormData){
         "use server"
         const nome_usuario = formData.get("nomeusuario")

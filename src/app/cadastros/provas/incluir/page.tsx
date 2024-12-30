@@ -12,7 +12,7 @@ export default function IncluirFranquia() {
       <Header />
       <main className={estiloGlobal.dados}>
        <div className={estiloGlobal.titulo}>
-          <h1>Incluir Franquia</h1>
+          <h1>Incluir Prova</h1>
        </div>
 
        <div className={estiloGlobal.barraFuncoes}>

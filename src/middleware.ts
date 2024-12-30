@@ -14,36 +14,36 @@ export async function middleware(req: NextRequest) {
     }
 
     const token = await getCookieServer();
-    console.log("Token:", token);
 
     if (!token) {
         return NextResponse.redirect(new URL("/", req.url));
     }
 
-    const estaValido = await validarToken(token)
+    const userInfo = await validarToken(token);
 
-    if (!estaValido) {
+    if (!userInfo) {
         return NextResponse.redirect(new URL("/", req.url));
     }
 
-    return NextResponse.next();
-
+    // Inclui informações do usuário nos cookies
+    const response = NextResponse.next();
+    response.cookies.set("userInfo", JSON.stringify(userInfo));
+    return response;
 }
 
-async function validarToken(token: string){
-    if (!token) return false;
+async function validarToken(token: string) {
+    if (!token) return null;
 
-    try{
-        await api.get("/detalharusuario", {
-            headers:{
-                Authorization: `Bearer ${token}`
-            }
-        })
+    try {
+        const response = await api.get("/detalharusuario", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
 
-        return true;
-
-    }catch(err){
+        return response.data; 
+    } catch (err) {
         console.log(err);
-        return false;
+        return null;
     }
 }

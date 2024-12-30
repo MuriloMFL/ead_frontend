@@ -18,16 +18,28 @@ export default function Home() {
         senha
       })
 
-      console.log(response.data)
-
       const temposessao = 60 * 60 * 24;
-      await cookies().set("sessaoEad", response.data.token, {
+      const cookiesInstance = await cookies();
+      cookiesInstance.set("sessaoEad", response.data.token, {
         maxAge: temposessao,
         path: "/",
         httpOnly: false,
         secure: process.env.NODE_ENV === "production"
       })
 
+      cookiesInstance.set("userInfo", JSON.stringify({
+        id: response.data.id,
+        nome_usuario: response.data.nome_usuario,
+        tipo_usuario: response.data.tipo_usuario,
+        email: response.data.email,
+        login: response.data.login,
+        id_franquia: response.data.id_franquia,
+    }), {
+        maxAge: temposessao,
+        path: "/",
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+    });
     }catch(err: any){
       console.log(err)
     }

@@ -60,3 +60,20 @@ body{
         font-size: 93.5%;
     }
 }
+
+@media print {
+    body {
+      background-color: #fff;
+    }
+  
+    header {
+        display: none; 
+    }
+    .acoes {
+      display: none;
+    }
+  
+    .btn, .inputPesquisa, .inputPesquisaSelect, .barraFuncoes {
+      display: none;
+    }
+  }

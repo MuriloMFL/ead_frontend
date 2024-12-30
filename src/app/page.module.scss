@@ -46,24 +46,24 @@
     border: 1px solid var(--bordas);
     border-radius: 4px;
     padding: 16px;
-    font-size: 16px;
+    font-size: 20px;
   }  
 
   form button:hover{
     transform: scale(1.03);
     color: #fff;
   }
-
 }
 
 .dados {
   max-width: 1250px;
-  min-height: 100vh;
+  min-height: 90vh;
   margin: 0 auto;
   padding: 0 16px; 
   display: flex;
   flex-direction: column;
   background-color: var(--fundodados);
+  padding-bottom: 16px;
 }
 
 .titulo{
@@ -139,7 +139,39 @@
   font-size: 16px;
   margin-right: 10px;
 }
+.inputPesquisaSelectForm {
+  height: 34px;
+  min-width: 230px;
+  border: 1px solid var(--bordas);
+  border-radius: 4px;
+  padding: 0px;
+  font-size: 16px;
+  margin-right: 10px;
+}
 
+.listaSistemas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 200px;
+  max-width: 230px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  background: #fff;
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+}
+
+.listaSistemas li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.listaSistemas li:hover {
+  background: #f0f0f0;
+}
+ 
 .grid{
     width: 100%;
     height: auto;
@@ -148,7 +180,6 @@
     flex-direction: row;
     border: 1px solid var(--bordas);
     border-radius: 4px;
-    
     table {
       margin: 0;
       width: 100%;
@@ -156,6 +187,7 @@
       padding: 0;
       table-layout: fixed;
       border-collapse: collapse;
+
     }
     table caption{
       font-size: 1.5rem;
@@ -167,13 +199,51 @@
       padding: 0.6em;
       letter-spacing: 0.1;
       font-weight: bold;
-      text-transform: uppercase;      
+      text-transform: uppercase;   
     }
 
     table tr{
       border-bottom: 1px solid var(--bordas);
       text-align: center;
     }
+
+    table th:first-child, /* O primeiro <th> (ID) */
+    table td:first-child { /* O primeiro <td> (ID) */
+        width: 100px;
+        text-align: center;
+    }
+
+    table th:last-child, /* O primeiro <th> (ID) */
+    table td:last-child { /* O primeiro <td> (ID) */
+        width: 150px;
+        text-align: center;
+    }
+}
+
+.gridCadastros{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  table{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  table tr{
+    width: 100%;
+    text-align: center;
+    align-items: center;
+  }
+  table td {
+    padding: 5px;
+  }
+
+
+  .cabecalhoFormCadastro{
+    border: 1px solid var(--bordas);
+    border-radius: 4px;
+    width: 100%;
+  }
 }
 
 .formCadastro{
@@ -190,7 +260,14 @@
   justify-content: Center;
   gap: 0.3em;
 }
+.error {
+  align-items: center;
+  p{
+    color: red;
 
+  }
+
+}
 @media (max-width: 620px){
   .login{
     width: 90%;
@@ -244,7 +321,22 @@
       font-weight: bold;
       text-transform: uppercase;
     }
+
+    table th:first-child,
+    table td:first-child,
+    table th:last-child,
+    table td:last-child {
+      width: auto;
+      text-align: right; /* Ajustar alinhamento no responsivo */
+    }
   }
 
 }
-
+@media print {
+  .acoes {
+    display: none;
+  }
+  .btn, .inputPesquisa, .inputPesquisaSelect, .barraFuncoes {
+    display: none;
+  }
+}

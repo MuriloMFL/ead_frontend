@@ -40,49 +40,12 @@
     }
 }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdownLink {
-    cursor: pointer;
-    color: var(--textoNav);
-    text-decoration: none;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.dropdownContent {
-    display: none;
-    position: absolute;
-    background-color: var(--nav);
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    padding: 10px;
-    border-radius: 4px;
-}
-
-.dropdownContent a {
-    color: var(--textoNav);
-    padding: 8px 12px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdownContent a:hover {
-    color: var(--textoNavHover);
-}
-
-.dropdown:hover .dropdownContent {
-    display: block;
-}
-
 /* Ícone de menu hamburguer */
 .icon {
     display: none;
     cursor: pointer;
+    font-size: 24px; /* Ajuste o tamanho do ícone */
+    color: var(--textoNav);
 }
 
 .usuario {
@@ -98,8 +61,34 @@
     }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
     .headerConteudo {
-        display: none;
+        .headerNav {
+            display: none;
+        }
+
     }
+
+    .icon {
+        display: block;
+    }
+
+}
+.headerConteudo {
+
+.showMenu {
+    display: flex !important; 
+    flex-direction: column; 
+    background-color: var(--nav); 
+    height: 500px;
+    gap: 10px; 
+    padding: 20px;
+    position: absolute; 
+    width: 100%;
+    height: 100%;
+    top: 75px; 
+    right: 0; 
+    border-radius: 8px;
+    overflow-y: auto; 
+}
 }

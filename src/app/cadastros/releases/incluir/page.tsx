@@ -1,3 +1,4 @@
+"use client"
 import estiloGlobal from '../../../page.module.scss';
 import { Header } from '@/app/dashboard/componentes/header';
 import { api } from '@/servicos/api';

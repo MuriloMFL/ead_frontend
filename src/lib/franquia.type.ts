@@ -1,7 +1,7 @@
 export interface FranquiaProps{
-    id_franquia: string,
+    id_franquia: number,
     nome: string,
     responsavel: string,
-    telefone: string
+    telefone: string,
     status: boolean
 }
