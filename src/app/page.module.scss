@@ -1,0 +1,250 @@
+.conteinerCentral{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.login{
+  margin-top: 24px;
+  padding-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap:   16px;
+  width: 318px;
+  border-radius: 4px;
+  background-color: var(--subfundo);
+  
+  .toplogin {
+    max-width: 318px;
+  }
+
+  form{
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    gap: 16px;
+  }
+
+  form button{
+    height: 40px;
+    font-size: 16px;
+    background-color: var(--btnlogin);
+    border: 1px solid var(--bordas);
+    border-radius: 4px;
+    font-weight: bold;
+    transition: all 0.5s;
+  }
+
+  form input{
+    height: 40px;
+    border: 1px solid var(--bordas);
+    border-radius: 4px;
+    padding: 16px;
+    font-size: 16px;
+  }  
+
+  form button:hover{
+    transform: scale(1.03);
+    color: #fff;
+  }
+
+}
+
+.dados {
+  max-width: 1250px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 16px; 
+  display: flex;
+  flex-direction: column;
+  background-color: var(--fundodados);
+}
+
+.titulo{
+  width: 100%;
+  height: 47px;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 16px; 
+  display: flex;
+  border: 1px solid var(--bordas);
+  border-radius: 4px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.barraFuncoes{
+  width: 100%;
+  height: 40px;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 16px; 
+  display: flex;
+  flex-direction: row;
+  border: 1px solid var(--bordas);
+  border-radius: 4px;
+  align-items: center;
+  justify-content: space-between;
+  
+}
+
+.btn{
+  height: 30px;
+  font-size: 16px;
+  border: 1px solid var(--bordas);
+  padding: 5px;
+  margin: 5px;  border-radius: 4px;
+  font-weight: bold;
+  transition: all 0.3s;  
+}
+
+.btn.incluir {
+  background-color: var(--btnincluir);
+}
+.btn.imprimir {
+  background-color: var(--btnImprimir);
+}
+.btn.alterar {
+  background-color: var(--btnalterar);
+}
+.btn.excluir {
+  background-color: var(--btnexcluir);
+}
+
+.btn:hover{
+  transform: scale(1.03);
+  color: var(--textoNavHover);
+}
+
+.inputPesquisa {
+  height: 30px;
+  border: 1px solid var(--bordas);
+  border-radius: 4px;
+  padding: 16px;
+  font-size: 16px;
+}
+
+.inputPesquisaSelect {
+  height: 34px;
+  border: 1px solid var(--bordas);
+  border-radius: 4px;
+  padding: 0px;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.grid{
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    margin-top: 20px;
+    flex-direction: row;
+    border: 1px solid var(--bordas);
+    border-radius: 4px;
+    
+    table {
+      margin: 0;
+      width: 100%;
+      height: auto;
+      padding: 0;
+      table-layout: fixed;
+      border-collapse: collapse;
+    }
+    table caption{
+      font-size: 1.5rem;
+      margin: 0.5em 0 0.75em;
+    }
+  
+    table th{
+      background-color: var(--cabecalho);
+      padding: 0.6em;
+      letter-spacing: 0.1;
+      font-weight: bold;
+      text-transform: uppercase;      
+    }
+
+    table tr{
+      border-bottom: 1px solid var(--bordas);
+      text-align: center;
+    }
+}
+
+.formCadastro{
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 16px; 
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--bordas);
+  border-radius: 4px;
+  align-items: center;
+  justify-content: Center;
+  gap: 0.3em;
+}
+
+@media (max-width: 620px){
+  .login{
+    width: 90%;
+  }
+  .titulo{
+    size: 50%;
+    font-size: 80%;
+  }
+
+  .barraFuncoes{
+    width: 100%;
+    height: auto;
+    padding: 0.2em;
+  }
+  .inputPesquisa{
+    margin-top: auto;
+  }
+
+  .grid{
+    table{
+      border: 0;
+    }
+    table caption{
+      font-size: 1.3em;
+    }
+    table thead{
+      border: none;
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    table tr {
+      border-bottom: 1px solid var(--bordas);
+      display: block;
+      margin-bottom: 0.60em;
+    }
+
+    table td {
+      border-bottom: 1px solid var(--bordas);
+      display: block;
+      text-align: right;
+      padding: 3px;
+    }
+
+    table td::before{
+      content:attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+
+}
+

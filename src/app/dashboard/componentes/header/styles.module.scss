@@ -1,0 +1,105 @@
+.headerContainer {
+    height: 75px;
+    background-color: var(--nav);
+}
+
+.headerConteudo {
+    max-width: 1280px;
+    height: 5rem;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .headerNav {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+
+        a {
+            color: var(--textoNav);
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+
+            &:hover {
+                color: var(--textoNavHover);
+                transition: color 0.8s;
+            }
+        }
+
+        button {
+            border: 0;
+            background-color: transparent;
+
+            &:hover {
+                transform: scale(1.2);
+            }
+        }
+    }
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdownLink {
+    cursor: pointer;
+    color: var(--textoNav);
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.dropdownContent {
+    display: none;
+    position: absolute;
+    background-color: var(--nav);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.dropdownContent a {
+    color: var(--textoNav);
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdownContent a:hover {
+    color: var(--textoNavHover);
+}
+
+.dropdown:hover .dropdownContent {
+    display: block;
+}
+
+/* Ícone de menu hamburguer */
+.icon {
+    display: none;
+    cursor: pointer;
+}
+
+.usuario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-left: 50px;
+    transition: transform 0.8s;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+@media (max-width: 1000px) {
+    .headerConteudo {
+        display: none;
+    }
+}
