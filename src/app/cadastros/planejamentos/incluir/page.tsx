@@ -316,13 +316,14 @@ export default function IncluirSubModulo() {
             </tr>
             <tr>
             <td colSpan={3}>
-                <input 
-                  required
-                  type="text"  
-                  className={estiloLocal.inputPlanejamento} 
-                  placeholder='Proposta'
-                  value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}/>
+            <textarea
+              required
+              className={estiloLocal.inputPlanejamento}
+              placeholder="Proposta"
+              value={nome_planejamento}
+              onChange={(e) => setNomePlanejamento(e.target.value)}
+              style={{ resize: 'vertical', width: '100%', height: '100px' }}
+            />
               </td>             
             </tr>
 
@@ -333,13 +334,14 @@ export default function IncluirSubModulo() {
             </tr>
             <tr>
             <td colSpan={3}>
-                <input 
-                  required
-                  type="text"  
-                  className={estiloLocal.inputPlanejamento} 
-                  placeholder='Impedimentos'
-                  value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}/>
+            <textarea
+              required
+              className={estiloLocal.inputPlanejamento}
+              placeholder="Impedimentos"
+              value={nome_planejamento}
+              onChange={(e) => setNomePlanejamento(e.target.value)}
+              style={{ resize: 'vertical', width: '100%', height: '100px'}}
+            />
               </td>             
             </tr>
 
@@ -350,13 +352,14 @@ export default function IncluirSubModulo() {
             </tr>
             <tr>
             <td colSpan={3}>
-                <input 
-                  required
-                  type="text"  
-                  className={estiloLocal.inputPlanejamento} 
-                  placeholder='Observação Final'
-                  value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}/>
+            <textarea
+              required
+              className={estiloLocal.inputPlanejamento}
+              placeholder="Observação Final"
+              value={nome_planejamento}
+              onChange={(e) => setNomePlanejamento(e.target.value)}
+              style={{ resize: 'vertical', width: '100%', height: '100px' }}
+            />
               </td>             
             </tr>
             </tbody>
