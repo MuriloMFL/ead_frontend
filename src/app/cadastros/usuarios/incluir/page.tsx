@@ -65,7 +65,8 @@ export default function IncluirUsuario() {
           try {
             await api.post(
               "/criarusuario",
-              { nome_usuario,
+              { 
+                nome_usuario,
                 email,
                 login,
                 senha,

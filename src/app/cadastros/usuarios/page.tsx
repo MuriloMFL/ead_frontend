@@ -15,8 +15,8 @@ export default function CadastrarUsuarios(){
     const router = useRouter();
 
     const handleincluir = () => {
-      document.cookie = "id_usuario=; path=/; expires=Thu, 1 Jan 1970 00:00:00 UTC"
-      setIdUsuario(null)
+      document.cookie = "id_usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+      setIdUsuario(null);
       router.push('/cadastros/usuarios/incluir')
     }
 
@@ -32,7 +32,7 @@ export default function CadastrarUsuarios(){
     }
 
     const handleAlterar = (id_usuario: number) =>{
-      document.cookie = `id_usuario=${id_usuario}; max-age=86000`;
+      document.cookie = `id_usuario=${id_usuario}; max-age=86000; path=/`;
       router.push('/cadastros/usuarios/incluir')
     }
 
