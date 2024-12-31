@@ -43,7 +43,7 @@ export default function CadastrarSistemas(){
     };
 
     const handleAlterar = async (id_sistema: number) => {
-      document.cookie = `id_sistema=${id_sistema}; path=/; max-age=86400;`;
+      document.cookie = `id_sistema=${id_sistema} path=/; max-age=86400;`;
       router.push("/cadastros/sistemas/incluir");
     }
 

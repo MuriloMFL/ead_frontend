@@ -6,6 +6,7 @@ import { faqProps } from '@/lib/faq.type'
 import { buscaDados } from '@/servicos/buscar'
 import { useRouter } from 'next/navigation'
 import { excluirDados } from '@/servicos/excluir'
+import { toast } from 'react-toastify'
 
 export default function CadastrarFaqs(){
     const [id_faq, setIdFaq] = useState<string | null>(null)
@@ -27,7 +28,7 @@ export default function CadastrarFaqs(){
     }, [])
     
     const handleincluir = () => {
-      document.cookie = "id_faq=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+      document.cookie = "id_faq=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       setIdFaq(null)
       router.push('/cadastros/faqs/incluir')
     }
@@ -40,11 +41,10 @@ export default function CadastrarFaqs(){
     }
 
     const handleAlterar = (id_faq: number) =>{
-      document.cookie = `id_faq=${id_faq} path=/ max-age=86400;`
+      document.cookie = `id_faq=${id_faq} path=/; max-age=86400;`
       router.push('/cadastros/faqs/incluir')
+      toast(id_faq)
     }
-
-
 
     return (
         <>

@@ -30,12 +30,12 @@ const permissions: Record<'TECNICO' | 'SUPERVISOR' | 'CQS' | 'ADMINISTRADOR', JS
     ADMINISTRADOR: [
         <Link key="aulas" href="/cadastros/aulas">Aulas</Link>,
         <Link key="provas" href="/cadastros/provas">Provas</Link>,
+        <Link key="releases" href="/cadastros/releases">Release</Link>,
         <Link key="usuarios" href="/cadastros/usuarios">Usuário</Link>,
         <Link key="franquias" href="/cadastros/franquias">Franquias</Link>,
         <Link key="questoes" href="/cadastros/questoes">Questões</Link>,
         <Link key="videos" href="/cadastros/videos">Vídeos</Link>,
         <Link key="faqs" href="/cadastros/faqs">FAQs</Link>,
-        <Link key="releases" href="/cadastros/releases">Release</Link>,
         <Link key="sistemas" href="/cadastros/sistemas">Sistemas</Link>,
         <Link key="modulos" href="/cadastros/modulos">Modulos</Link>,
         <Link key="submodulos" href="/cadastros/submodulos">SubModulos</Link>,

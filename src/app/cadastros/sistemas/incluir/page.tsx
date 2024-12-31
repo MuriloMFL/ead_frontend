@@ -18,7 +18,7 @@ export default function IncluirSistema() {
       .split('; ')
       .find(row => row.startsWith('id_sistema='))
       ?.split('=')[1];
-    setIdSistema(cookies || null);
+      setIdSistema(cookies || null);
 
     if (cookies) {
       selecionarSistema(cookies);

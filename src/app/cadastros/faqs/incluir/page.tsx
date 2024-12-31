@@ -1,6 +1,5 @@
 "use client"
 import estiloGlobal from '../../../page.module.scss';
-import estiloLocal  from './page.module.scss'
 import { Header } from '@/app/dashboard/componentes/header';
 import { api } from '@/servicos/api';
 import { getCookieServer } from '@/lib/cookieServidor';
@@ -19,7 +18,6 @@ export default function IncluirFaq() {
   const [observacao, setObservacao]                = useState<string>('');
   const [order, setOrder]                          = useState<string>('');
   const [id_submodulo, setIdSubmodulo]             = useState<string>('');
-  const [nome_submodulo, setNomeSubModulo]         = useState<string>('');
   const [id_sistema, setIdSistema]                 = useState<string>('');
   const [id_modulo, setidModulo]                   = useState<string>('');
   const [sistema, setSistema]                      = useState<SistemaProps[]>([]);
@@ -30,16 +28,17 @@ export default function IncluirFaq() {
     useEffect (() => {
       const cookies = document.cookie
         .split('; ')
-        .find(row => row.startsWith('id_faq'))
+        .find(row => row.startsWith('id_faq='))
         ?.split('=')[1]
         setIdFaq(cookies || null);
 
         if(cookies){
-          detalharSubmodulo(cookies)
+          detalharFaq(cookies)
         }
+        toast(cookies)
     }, [])
     
-    async function detalharSubmodulo(id_faq: string){
+    async function detalharFaq(id_faq: string){
       const token = await getCookieServer();
       try {
         const { data } = await api.get(`/detalharfaq/${id_faq}`, {
@@ -53,6 +52,8 @@ export default function IncluirFaq() {
           setIdSubmodulo(data.id_submodulo || "");
           setIdSistema(data.id_sistema || "")
           setidModulo(data.id_modulo || "")
+          setLink(data.link || "")
+          setObservacao(data.observacao || "")
         } else {
           toast.warn("Nenhuma FAQ encontrada para o ID fornecido.");
         }
