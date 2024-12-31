@@ -16,7 +16,7 @@ export default function IncluirFaq() {
   const [nome_faq, setNomeFaq]                     = useState<string>('');
   const [link, setLink]                            = useState<string>('');
   const [observacao, setObservacao]                = useState<string>('');
-  const [order, setOrder]                          = useState<string>('');
+  const [order, setOrder]                          = useState<string>('0');
   const [id_submodulo, setIdSubmodulo]             = useState<string>('');
   const [id_sistema, setIdSistema]                 = useState<string>('');
   const [id_modulo, setidModulo]                   = useState<string>('');
@@ -35,7 +35,6 @@ export default function IncluirFaq() {
         if(cookies){
           detalharFaq(cookies)
         }
-        toast(cookies)
     }, [])
     
     async function detalharFaq(id_faq: string){
@@ -49,6 +48,7 @@ export default function IncluirFaq() {
   
         if (data) {
           setIdFaq(data.id_faq || "")
+          setNomeFaq(data.nome_faq || "")
           setIdSubmodulo(data.id_submodulo || "");
           setIdSistema(data.id_sistema || "")
           setidModulo(data.id_modulo || "")
@@ -87,7 +87,7 @@ export default function IncluirFaq() {
           const token = await getCookieServer();
           await api.put(
             "/atualizarfaq",
-            { id_sistema, id_modulo, id_submodulo, nome_faq, link, observacao, order},
+            { id_faq, id_sistema, id_modulo, id_submodulo, nome_faq, link, observacao, order},
             {
               headers: {
                 Authorization: `Bearer ${token}`,

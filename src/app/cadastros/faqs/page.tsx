@@ -41,9 +41,8 @@ export default function CadastrarFaqs(){
     }
 
     const handleAlterar = (id_faq: number) =>{
-      document.cookie = `id_faq=${id_faq} path=/; max-age=86400;`
+      document.cookie = `id_faq=${id_faq}; max-age=86400;`
       router.push('/cadastros/faqs/incluir')
-      toast(id_faq)
     }
 
     return (
@@ -107,7 +106,7 @@ export default function CadastrarFaqs(){
                   <td>
                     <button 
                         className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
-                        onClick={() => handleAlterar(Number(id_faq))}
+                        onClick={() => handleAlterar(Number(item.id_faq))}
                         >Alterar
                     </button>
                     <button 

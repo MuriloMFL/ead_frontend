@@ -17,9 +17,8 @@ export default function IncluirVideo() {
   const [nome_video, setNomeVideo]                 = useState<string>('');
   const [link, setLink]                            = useState<string>('');
   const [observacao, setObservacao]                = useState<string>('');
-  const [order, setOrder]                          = useState<string>('');
+  const [order, setOrder]                          = useState<string>('0');
   const [id_submodulo, setIdSubmodulo]             = useState<string>('');
-  const [nome_submodulo, setNomeSubModulo]         = useState<string>('');
   const [id_sistema, setIdSistema]                 = useState<string>('');
   const [id_modulo, setidModulo]                   = useState<string>('');
   const [sistema, setSistema]                      = useState<SistemaProps[]>([]);
@@ -30,16 +29,16 @@ export default function IncluirVideo() {
     useEffect (() => {
       const cookies = document.cookie
         .split('; ')
-        .find(row => row.startsWith('id_video'))
+        .find(row => row.startsWith('id_video='))
         ?.split('=')[1]
         setIdVideo(cookies || null);
 
         if(cookies){
-          detalharSubmodulo(cookies)
+          detalharvideo(cookies)
         }
     }, [])
     
-    async function detalharSubmodulo(id_faq: string){
+    async function detalharvideo(id_video: string){
       const token = await getCookieServer();
       try {
         const { data } = await api.get(`/detalharvideo/${id_video}`, {
@@ -53,6 +52,10 @@ export default function IncluirVideo() {
           setIdSubmodulo(data.id_submodulo || "");
           setIdSistema(data.id_sistema || "")
           setidModulo(data.id_modulo || "")
+          setNomeVideo(data.nome_video || "")
+          setLink(data.link || "")
+          setObservacao(data.observacao || "")
+          setOrder(data.order || "")
         } else {
           toast.warn("Nenhum Video encontrada para o ID fornecido.");
         }
@@ -86,7 +89,7 @@ export default function IncluirVideo() {
           const token = await getCookieServer();
           await api.put(
             "/atualizarvideo",
-            { id_sistema, id_modulo, id_submodulo, nome_video, link, observacao, order},
+            { id_video, id_sistema, id_modulo, id_submodulo, nome_video, link, observacao, order},
             {
               headers: {
                 Authorization: `Bearer ${token}`,

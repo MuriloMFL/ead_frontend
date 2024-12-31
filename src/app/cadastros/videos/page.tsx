@@ -42,8 +42,6 @@ export default function CadastrarVideos(){
       router.push('/cadastros/videos/incluir')
     }
 
-
-
     return (
         <>
         <Header />

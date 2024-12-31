@@ -100,7 +100,7 @@ export default function CadastrarUsuarios(){
             </thead>
             <tbody>
               {
-                usuario.map ( (item) => (
+                usuario.map ((item) => (
                   <tr className={estiloGlobal.griditens} key={item.id_usuario}>
                   <td data-label="ID">{item.id_usuario}</td>
                   <td data-label="Nome">{item.nome_usuario}</td>
