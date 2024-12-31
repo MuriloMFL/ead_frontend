@@ -242,6 +242,7 @@ export default function IncluirSubModulo() {
                 <h4>Etapas do Planejamento</h4>
               </td>
             </tr>
+            
             <tr>
               <td>
                 <input 

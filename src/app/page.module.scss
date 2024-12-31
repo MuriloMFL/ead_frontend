@@ -259,7 +259,13 @@
   align-items: center;
   justify-content: Center;
   gap: 0.3em;
+
+  div{
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 }
+
 .error {
   align-items: center;
   p{
