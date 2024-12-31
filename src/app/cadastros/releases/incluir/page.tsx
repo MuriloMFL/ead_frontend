@@ -7,7 +7,15 @@ import { FranquiaProps } from '@/lib/franquia.type';
 import { useState, useEffect} from 'react';
 
 export default function IncluirRelease() {
-
+  const [id_release, setIdRelease]             = useState<string | null>(null)
+  const [numero_release, setnumeroRelease]     = useState<string>('')
+  const [versao_gestores, setVersaoGestores]   = useState<string>('')
+  const [versao_sincdata, setVersaoSincdata]   = useState<string>('')
+  const [versao_gestorpdv, setVersaoGestorPDV] = useState<string>('')
+  const [versao_balcao, setVersaoBalcao]       = useState<string>('')
+  const [id_usuario, setIdUsuario]             = useState<string>('')
+  const [data_inclusao, setDataInicio]         = useState<string>('')
+  const [finalizado, setFinalizado]            = useState<string>('false')
   return (
     <>
       <Header />
@@ -23,25 +31,71 @@ export default function IncluirRelease() {
           </div>
        </div>
 
-       <form className={estiloGlobal.formCadastro}>
-          <table>
-            <tr>
-              <td><label>Codigo:</label></td>
-              <td><input type='number' className={estiloGlobal.inputPesquisa} placeholder='ID'/></td>
-            </tr>
-            <tr>
-              <td><label>Release:</label></td>
-              <td><input type="text"  className={estiloGlobal.inputPesquisa} placeholder='Nome da Franquia'/></td>
-            </tr>
-            <tr>
-              <td><label>Responsavel:</label></td>
-              <td><input type="text"  className={estiloGlobal.inputPesquisa} placeholder='Nome do responsavel'/></td>
-            </tr>
-            <tr>
-              <td><label>Telefone:</label></td>
-              <td><input type="text"  className={estiloGlobal.inputPesquisa} placeholder='Telefone'/></td>
-            </tr>
-          </table>
+       <form className={`${estiloGlobal.formCadastro}  ${estiloGlobal.gridCadastros}`}>
+       <h4 className={estiloGlobal.cabecalhoFormCadastro}>Insira os dados da Release</h4>
+        <div>
+          <div className={estiloGlobal.checks}>
+          <div>
+              <label>Numero Release: </label>
+              <input 
+                type='number' 
+                className={estiloGlobal.inputPesquisa} 
+                placeholder='Numero'
+                style={{width: '130px', appearance: 'none', WebkitAppearance: 'none'}}
+              />
+            </div>
+            <div>
+             <label>Status: </label>
+             <select className={estiloGlobal.inputPesquisaSelect}>
+              <option value='true'>Finalizado</option>
+              <option value='false'>Editando</option>
+             </select>
+            </div>
+          </div>
+
+          <div style={{display: 'flex'}}>
+                <div>
+                  <label>Versão Gestores: </label>
+                  <input 
+                    type='text' 
+                    className={estiloGlobal.inputPesquisa} 
+                    placeholder='Versão Gestores'
+                    style={{width: '160px'}}
+                  />
+                </div>
+
+                <div>
+                  <label>Versão GestorPDV: </label>
+                  <input 
+                    type='text' 
+                    className={estiloGlobal.inputPesquisa} 
+                    placeholder='Versão GestorPDV'
+                    style={{width: '160px'}}
+                  />
+                </div>
+
+                <div>
+                <label>Versão Sincdata: </label>
+                <input 
+                  type='text' 
+                  className={estiloGlobal.inputPesquisa} 
+                  placeholder='Versão Sincdata'
+                  style={{width: '160px'}}
+                />
+                </div>
+
+                <div>
+                  <label>Versão balcão: </label>
+                  <input 
+                    type='text' 
+                    className={estiloGlobal.inputPesquisa} 
+                    placeholder='Versão balcão'
+                    style={{width: '160px'}}
+                  />
+                </div>
+            </div>
+          </div>
+          <h4 className={estiloGlobal.cabecalhoFormCadastro}>Insira as alterações e correções</h4>
        </form>
 
       </main>
