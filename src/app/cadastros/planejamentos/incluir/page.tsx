@@ -16,7 +16,6 @@ export default function IncluirSubModulo() {
   const [id_planejamento, setIdPlanejamento]       = useState<string | null>(null);
   const [nome_planejamento, setNomePlanejamento]   = useState<string>('');
   const [id_submodulo, setIdSubmodulo]             = useState<string>('');
-  const [nome_submodulo, setNomeSubModulo]         = useState<string>('');
   const [id_sistema, setIdSistema]                 = useState<string>('');
   const [id_modulo, setidModulo]                   = useState<string>('');
   const [sistema, setSistema]                      = useState<SistemaProps[]>([]);
@@ -36,7 +35,7 @@ export default function IncluirSubModulo() {
         }
     }, [])
     
-    async function detalharSubmodulo(id_submodulo: string){
+    async function detalharSubmodulo(id_planejamento: string){
       const token = await getCookieServer();
       try {
         const { data } = await api.get(`/detalharplanejamento/${id_planejamento}`, {
@@ -65,8 +64,8 @@ export default function IncluirSubModulo() {
           const token = await getCookieServer();
           try {
             await api.post(
-              "/criarsubmodulo",
-              { nome_submodulo, status: true, id_sistema, id_modulo },
+              "/criarplanejamento",
+              { nome_planejamento, id_sistema, id_modulo,  },
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -83,7 +82,7 @@ export default function IncluirSubModulo() {
           const token = await getCookieServer();
           await api.put(
             "/atualizarsubmodulo",
-            { nome_submodulo, id_submodulo, id_sistema, id_modulo},
+            { nome_planejamento, id_submodulo, id_sistema, id_modulo},
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -158,15 +157,12 @@ export default function IncluirSubModulo() {
        </div>
 
        <form className={`${estiloGlobal.formCadastro} ${estiloGlobal.gridCadastros}`}>
-          <table >
-            <tbody>
-            <tr>
-              <td colSpan={3} className={estiloGlobal.cabecalhoFormCadastro}><
-                h4>Escolha os dados do planejamento</h4>
-              </td>
-            </tr>
-            <tr>
-              <td>
+          <div>
+              <div>
+                <div className={estiloGlobal.cabecalhoFormCadastro}>
+                <h4>Escolha os dados do planejamento</h4>
+                </div>
+                
                 <select 
                   required
                   className={estiloLocal.inputPesquisaSelectForm}
@@ -183,9 +179,7 @@ export default function IncluirSubModulo() {
                     </option>                    
                   ))}
                 </select>
-                </td>
-
-                <td>
+ 
                 <select 
                   required
                   className={estiloLocal.inputPesquisaSelectForm}
@@ -202,9 +196,7 @@ export default function IncluirSubModulo() {
                     </option>
                   ))}
                 </select>
-                </td>
-
-                <td>
+                
                 <select 
                   required
                   className={estiloLocal.inputPesquisaSelectForm}
@@ -221,102 +213,119 @@ export default function IncluirSubModulo() {
                     </option>
                   ))}
                 </select>
-
-              </td>
-            </tr>
-
-            <tr>
-              <td colSpan={3}>
+              </div>
+              
+              <div>
                 <input 
                   required
                   type="text"  
                   className={estiloLocal.inputPlanejamento} 
                   placeholder='Nome do Planejamento'
                   value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}/>
-              </td>
-            </tr>
+                  onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                />
+              </div>
 
-            <tr>
-              <td colSpan={3} className={estiloGlobal.cabecalhoFormCadastro}>
-                <h4>Etapas do Planejamento</h4>
-              </td>
-            </tr>
-            
-            <tr>
-              <td>
+              <div className={estiloGlobal.cabecalhoFormCadastro}>
+                <h4>Previsão de inicio e Fim</h4>
+              </div>
+
+              <div className={estiloGlobal.checks}>
+                <div>
+                  <label>Previsão de Inicio: </label>
+                  <input 
+                      type='date'
+                      name='data-inicio'
+                      className={estiloGlobal.inputPesquisa}
+                    />
+                </div>
+                <div>
+                <label>Previsão de entrega: </label>
                 <input 
-                  type="checkbox"  
-                  className='' 
-                  name='modulo_novo'
-                  value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    type='date'
+                    name='data-previsao'
+                    className={estiloGlobal.inputPesquisa}
                   />
-                  <label>Modulo Novo?</label>
-              </td>
-              <td>
-                  <input 
-                  type="checkbox"  
-                  className='' 
-                  name='modulo_novo'
-                  value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}
-                  />
-                  <label>Elicitação</label>
-              </td>
+              </div>
+                </div>
 
-              <td>
+
+              <div className={estiloGlobal.cabecalhoFormCadastro}>
+                <h4>Etapas do Planejamento</h4>
+              </div>
+
+              <div className={estiloGlobal.checks}>
+                <div>
                   <input 
-                  type="checkbox"  
-                  className='' 
-                  name='modulo_novo'
-                  value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    type="checkbox"  
+                    className='' 
+                    name='modulo_novo'
+                    value={nome_planejamento}
+                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
                   />
-                  <label>Roteiro</label>
-              </td>
-              </tr>
-              <tr>
-              <td>
+                  <label> Modulo Novo?  </label>
+                </div>
+
+                <div>
                   <input 
-                  type="checkbox"  
-                  className='' 
-                  name='modulo_novo'
-                  value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    type="checkbox"  
+                    className='' 
+                    name='modulo_novo'
+                    value={nome_planejamento}
+                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                  />
+                  <label> Elicitação </label>
+                </div>
+
+                <div>
+                  <input 
+                    type="checkbox"  
+                    className='' 
+                    name='modulo_novo'
+                    value={nome_planejamento}
+                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                  />
+                  <label> Roteiro </label>
+                </div>
+
+                <div>
+                  <input 
+                    type="checkbox"  
+                    className='' 
+                    name='modulo_novo'
+                    value={nome_planejamento}
+                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
                   />
                   <label>Video</label>
-              </td>
-              <td>
+                </div>
+
+                <div>
                   <input 
-                  type="checkbox"  
-                  className='' 
-                  name='modulo_novo'
-                  value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    type="checkbox"  
+                    className='' 
+                    name='modulo_novo'
+                    value={nome_planejamento}
+                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
                   />
                   <label>Validação</label>
-              </td>
+                </div>
 
-              <td>
+                <div>
                   <input 
-                  type="checkbox"  
-                  className='' 
-                  name='modulo_novo'
-                  value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    type="checkbox"  
+                    className='' 
+                    name='modulo_novo'
+                    value={nome_planejamento}
+                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
                   />
                   <label>Finalizado</label>
-              </td>
-            </tr>
+                </div>
+             </div>
 
-            <tr>
-              <td colSpan={3} className={estiloGlobal.cabecalhoFormCadastro}>
-                <h4>Proposta</h4>
-              </td>
-            </tr>
-            <tr>
-            <td colSpan={3}>
+            <div className={estiloGlobal.cabecalhoFormCadastro}>
+              <h4>Proposta</h4>
+            </div>
+
             <textarea
               required
               className={estiloLocal.inputPlanejamento}
@@ -325,16 +334,11 @@ export default function IncluirSubModulo() {
               onChange={(e) => setNomePlanejamento(e.target.value)}
               style={{ resize: 'vertical', width: '100%', height: '100px' }}
             />
-              </td>             
-            </tr>
 
-            <tr>
-              <td colSpan={3} className={estiloGlobal.cabecalhoFormCadastro}>
-                <h4>Impedimentos</h4>
-              </td>
-            </tr>
-            <tr>
-            <td colSpan={3}>
+            <div className={estiloGlobal.cabecalhoFormCadastro}>
+              <h4>Impedimentos</h4>
+            </div>
+
             <textarea
               required
               className={estiloLocal.inputPlanejamento}
@@ -343,16 +347,11 @@ export default function IncluirSubModulo() {
               onChange={(e) => setNomePlanejamento(e.target.value)}
               style={{ resize: 'vertical', width: '100%', height: '100px'}}
             />
-              </td>             
-            </tr>
 
-            <tr>
-              <td colSpan={3} className={estiloGlobal.cabecalhoFormCadastro}>
-                <h4>Observação Final</h4>
-              </td>
-            </tr>
-            <tr>
-            <td colSpan={3}>
+            <div className={estiloGlobal.cabecalhoFormCadastro}>
+              <h4>Observação Final</h4>
+            </div>
+
             <textarea
               required
               className={estiloLocal.inputPlanejamento}
@@ -361,10 +360,8 @@ export default function IncluirSubModulo() {
               onChange={(e) => setNomePlanejamento(e.target.value)}
               style={{ resize: 'vertical', width: '100%', height: '100px' }}
             />
-              </td>             
-            </tr>
-            </tbody>
-          </table>
+
+          </div>
        </form>
 
       </main>

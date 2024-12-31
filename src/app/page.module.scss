@@ -224,25 +224,16 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  table{
+
+  .checks{
+    justify-content: space-between;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
   }
-  table tr{
-    width: 100%;
-    text-align: center;
-    align-items: center;
-  }
-  table td {
-    padding: 5px;
-  }
-
-
   .cabecalhoFormCadastro{
     border: 1px solid var(--bordas);
     border-radius: 4px;
     width: 100%;
+    padding: 3px;
   }
 }
 
