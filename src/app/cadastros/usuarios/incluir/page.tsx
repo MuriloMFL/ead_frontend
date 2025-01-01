@@ -8,6 +8,7 @@ import { buscaDados } from '@/servicos/buscar';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { FranquiaProps } from '@/lib/franquia.type';
+import useUserInfo from '@/servicos/useUserInfo';
 
 export default function IncluirUsuario() {
   const [id_usuario, setIdUsuario]                 = useState<string | null>(null);
@@ -18,6 +19,7 @@ export default function IncluirUsuario() {
   const [id_franquia, setIdFranquia]               = useState<string>('');
   const [tipo_usuario, setTipoUsuario]             = useState<string>('');
   const [franquia, setFranquia]                    = useState<FranquiaProps[]>([]);
+  const userInfo = useUserInfo();
   const router = useRouter();
 
     useEffect (() => {
@@ -26,12 +28,12 @@ export default function IncluirUsuario() {
         .find(row => row.startsWith('id_usuario='))
         ?.split('=')[1]
         setIdUsuario(cookies || null);
-
+        
         if(cookies){
           detalharusuario(cookies)
         }
     }, [])
-    
+
     async function detalharusuario(id_usuario: string){
       const token = await getCookieServer();
       try {
@@ -115,14 +117,17 @@ export default function IncluirUsuario() {
     const selecionarFranquia = async () => {
       const filtros = {
         status: true,
+        id_franquia: userInfo?.id_franquia,
       };
       const franquia = await buscaDados('/listarfranquia', filtros);
       setFranquia(franquia);
     };
-  
+
     useEffect(() => {
-      selecionarFranquia();
-    }, []);
+        if(userInfo?.id_franquia) {
+          selecionarFranquia();
+        }
+    }, [userInfo]);
 
     const btnCancelar = () => {
       document.cookie = "id_usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
@@ -144,52 +149,78 @@ export default function IncluirUsuario() {
           </div>
        </div>
 
-       <form className={estiloGlobal.formCadastro}>
-          <div>
-              <div>
-              <h4>Franquia: </h4>
-              <select 
-                  required
-                  className={estiloGlobal.inputPesquisaSelectForm}
-                  name='id_franquia'
-                  value={id_franquia}
-                  onChange={(e) => {setIdFranquia(e.target.value)}}
-                 >
+       <form className={estiloGlobal.formCadastro} style={{padding: 0}}>
+              <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', padding: 0, margin: 0}}>
+                <div>
+                <h4>Franquia: </h4>
+                <select 
+                    required
+                    className={estiloGlobal.inputPesquisaSelectForm}
+                    name='id_franquia'
+                    value={id_franquia}
+                    onChange={(e) => {setIdFranquia(e.target.value)}}
+                  >
                   <option value="" disabled>
-                    Selecione um Sistema
+                    Selecione uma franquia
                   </option>
-                  {franquia.map( (item) =>(
-                    <option key={item.id_franquia} value={item.id_franquia}>
-                      {item.nome}
-                    </option>                    
-                  ))}
-                </select>
+                    {franquia.map( (item) =>(
+                      <option key={item.id_franquia} value={item.id_franquia}>
+                        {item.nome}
+                      </option>                    
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <h4>Grupo de Usuario: </h4>
+                  <select 
+                    value={tipo_usuario} 
+                    onChange={(e) => {setTipoUsuario(e.target.value)}} 
+                    className={estiloGlobal.inputPesquisaSelectForm} 
+                    style={{margin: 0}}
+                  > 
+                    <option value="" disabled>
+                      Selecione um Grupo
+                    </option>
+                    <option value='TECNICO'>TECNICO</option>
+                    <option value='SUPERVISOR'>SUPERVISOR</option>
+                    {id_franquia === '1' && (
+                      <>
+                        <option value="CQS">CQS</option>
+                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                      </>
+                    )}
+                  </select>
+                </div>
+                </div>
+
+              <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' , margin: 0}}>
+                <div>
+                  <h4>Nome do usuario</h4>
+                  <input 
+                      required
+                      type="text"  
+                      className={estiloGlobal.inputPesquisa}
+                      placeholder='Nome do Usuario'
+                      value={nome_usuario}
+                      onChange={(e) => {setNomeUsuario(e.target.value)}}
+                  />
+                </div>
+
+                <div>
+                  <h4>Email: </h4>
+                  <input 
+                      required
+                      type="email"  
+                      className={estiloGlobal.inputPesquisa} 
+                      placeholder='Email'
+                      value={email}
+                      onChange={(e) => {setEmail(e.target.value)}}
+                  />
+                </div>
               </div>
 
-              <div>
-                <h4>Nome do usuario</h4>
-                <input 
-                    required
-                    type="text"  
-                    className={estiloGlobal.inputPesquisa}
-                    placeholder='Nome do Usuario'
-                    value={nome_usuario}
-                    onChange={(e) => {setNomeUsuario(e.target.value)}}
-                />
-              </div>
-
-              <div>
-                <h4>Email: </h4>
-                <input 
-                    required
-                    type="email"  
-                    className={estiloGlobal.inputPesquisa} 
-                    placeholder='Email'
-                    value={email}
-                    onChange={(e) => {setEmail(e.target.value)}}
-                />
-              </div>
-              
+              <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', margin: 0 }}>
               <div>
                 <h4>Login</h4>
                 <input 
@@ -213,15 +244,9 @@ export default function IncluirUsuario() {
                     onChange={(e) => {setSenha(e.target.value)}}
                 />
               </div>
-              
-              <h4>Grupo de Usuario: </h4>
-              <select value={tipo_usuario} onChange={(e) => {setTipoUsuario(e.target.value)}} className={estiloGlobal.inputPesquisaSelectForm} >
-                <option value='TECNICO'>TECNICO</option>
-                <option value='SUPERVISOR'>SUPERVISOR</option>
-                <option value='CQS'>CQS</option>
-                <option value='ADMINISTRADOR'>ADMINISTRADOR</option>
-              </select>
-          </div>
+            </div>
+
+
        </form>
 
       </main>

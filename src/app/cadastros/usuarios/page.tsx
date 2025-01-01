@@ -15,7 +15,6 @@ export default function CadastrarUsuarios(){
     const [usuario, setUsuario] = useState<UsuarioProps[]>([])
     const router = useRouter();
     const userInfo = useUserInfo();
-    const [id_franquia, setIdFranquia] = useState<string>()
 
     const handleincluir = () => {
       document.cookie = "id_usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
