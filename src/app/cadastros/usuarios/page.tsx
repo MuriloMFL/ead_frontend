@@ -6,6 +6,7 @@ import { UsuarioProps } from '@/lib/usuario.type';
 import { useRouter } from 'next/navigation';
 import { buscaDados } from '@/servicos/buscar';
 import { excluirDados } from '@/servicos/excluir';
+import useUserInfo from '@/servicos/useUserInfo';
 
 export default function CadastrarUsuarios(){
     const [id_usuario, setIdUsuario] = useState<string | null>(null)
@@ -13,6 +14,8 @@ export default function CadastrarUsuarios(){
     const [status, setStatus] = useState<string>('true')
     const [usuario, setUsuario] = useState<UsuarioProps[]>([])
     const router = useRouter();
+    const userInfo = useUserInfo();
+    const [id_franquia, setIdFranquia] = useState<string>()
 
     const handleincluir = () => {
       document.cookie = "id_usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
@@ -40,15 +43,19 @@ export default function CadastrarUsuarios(){
       const filtros = {
         id_usuario: id_usuario,
         nome_usuario: nome_usuario,
+        id_franquia: userInfo?.id_franquia,
         status: status ==='true' ? true : status ==='false' ? false : undefined
       }
       const response = await buscaDados('/listarusuarioporfranquia', filtros)
       setUsuario(response)
     }
 
-    useEffect ( () => {
-      handlebuscar()
-    }, [])
+    useEffect(() => {
+      if (userInfo?.id_franquia) {
+        handlebuscar();
+      }
+    }, [userInfo]);
+
     return (
         <>
         <Header />

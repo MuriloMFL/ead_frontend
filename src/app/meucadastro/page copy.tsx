@@ -3,10 +3,26 @@ import styles from './styles.module.scss'
 import estiloGlobal from '../page.module.scss'
 import { Header } from '@/app/dashboard/componentes/header'
 import Link from 'next/link';
-import useUserInfo from '@/servicos/useUserInfo';
+import { useEffect, useState } from "react";
 
 export default function Meucadastro(){
-    const userInfo = useUserInfo();
+    const [userInfo, setUserInfo] = useState<
+    { nome_usuario: string; tipo_usuario: string; login: string; id_franquia: number; email: string } | null>(null);
+
+    useEffect(() => {
+        const cookie = document.cookie
+            .split("; ")
+            .find(row => row.startsWith("userInfo="));
+    
+        if (cookie) {
+            const userInfoValue = JSON.parse(decodeURIComponent(cookie.split("=")[1]));
+            console.log("Cookie recuperado:", userInfoValue); 
+            setUserInfo(userInfoValue);
+        } else {
+            console.log("Cookie userInfo não encontrado!");
+        }
+        console.log("Estado userInfo no componente:", userInfo);
+    }, []);
 
 const permissions: Record<'TECNICO' | 'SUPERVISOR' | 'CQS' | 'ADMINISTRADOR', JSX.Element[]> = {
     TECNICO: [],
