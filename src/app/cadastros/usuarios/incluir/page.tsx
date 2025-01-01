@@ -64,7 +64,7 @@ export default function IncluirUsuario() {
           const token = await getCookieServer();
           try {
             await api.post(
-              "/criarusuario",
+              "/usuario/criar",
               { 
                 nome_usuario,
                 email,
