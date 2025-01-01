@@ -14,12 +14,12 @@ import { SubModuloProps } from '@/lib/submodulo.type';
 
 export default function IncluirQuestao() {
   const [id_questao, setIdQuestao]                 = useState<string | null>(null);
-  const [nome_questao, setNomeQuestao]             = useState<string>('');
+  const [questao, setNomeQuestao]                  = useState<string>('');
   const [alternativa_A, setAlternativaA]           = useState<string>('');
   const [alternativa_B, setAlternativaB]           = useState<string>('');
   const [alternativa_C, setAlternativaC]           = useState<string>('');
   const [alternativa_D, setAlternativaD]           = useState<string>('');
-  const [correta, setCorreta]                      = useState<string>('');
+  const [correta, setCorreta]                      = useState<string>('A');
   const [observacao, setObservacao]                = useState<string>('');
   const [order, setOrder]                          = useState<string>('');
   const [id_submodulo, setIdSubmodulo]             = useState<string>('');
@@ -30,19 +30,22 @@ export default function IncluirQuestao() {
   const [submodulo, setSubModulo]                  = useState<SubModuloProps[]>([]);
   const router = useRouter();
 
-    useEffect (() => {
-      const cookies = document.cookie
+  useEffect(() => {
+    const cookies = document.cookie
         .split('; ')
-        .find(row => row.startsWith('id_questao'))
-        ?.split('=')[1]
-        setIdQuestao(cookies || null);
+        .find(row => row.startsWith('id_questao='))
+        ?.split('=')[1];
 
-        if(cookies){
-          detalharquestao(cookies)
-        }
-    }, [])
-    
-    async function detalharquestao(id_faq: string){
+    if (cookies) {
+        detalharquestao(cookies);
+        setIdQuestao(cookies);
+    } else {
+        setIdQuestao(null);
+    }
+    }, []);
+
+
+    async function detalharquestao(id_questao: string){
       const token = await getCookieServer();
       try {
         const { data } = await api.get(`/detalharquestao/${id_questao}`, {
@@ -56,6 +59,13 @@ export default function IncluirQuestao() {
           setIdSubmodulo(data.id_submodulo || "");
           setIdSistema(data.id_sistema || "")
           setidModulo(data.id_modulo || "")
+          setNomeQuestao(data.questao || "")
+          setAlternativaA(data.alternativa_A || "")
+          setAlternativaB(data.alternativa_B || "")
+          setAlternativaC(data.alternativa_C || "")
+          setAlternativaD(data.alternativa_D || "")
+          setCorreta(data.correta || "")
+          setObservacao(data.observacao || "")
         } else {
           toast.warn("Nenhuma Questão encontrada para o ID fornecido.");
         }
@@ -71,11 +81,11 @@ export default function IncluirQuestao() {
           const token = await getCookieServer();
           try {
             await api.post(
-              "/criarvideo",
+              "/criarquestoes",
               { id_sistema, 
                 id_modulo, 
                 id_submodulo, 
-                nome_questao, 
+                questao, 
                 alternativa_A, 
                 alternativa_B, 
                 alternativa_C, 
@@ -91,6 +101,7 @@ export default function IncluirQuestao() {
             toast.success("Gravado com sucesso.");
             router.push("../../cadastros/questoes");
           } catch {
+            toast.error("Erro ao incluir.");
             new Error('Erro');
           }
         }else {
@@ -98,10 +109,11 @@ export default function IncluirQuestao() {
           const token = await getCookieServer();
           await api.put(
             "/atualizarquestao",
-            { id_sistema, 
+            { id_questao,
+              id_sistema, 
               id_modulo, 
               id_submodulo, 
-              nome_questao, 
+              questao, 
               alternativa_A, 
               alternativa_B, 
               alternativa_C, 
@@ -115,10 +127,21 @@ export default function IncluirQuestao() {
             }
           );
     
-          toast.success("Gravado com sucesso.");
+          toast.success("Atualizado com sucesso. ");
           router.push("../../cadastros/questoes");
         } catch (err: any) {
-          throw new Error('Erro ao atualizar')
+          
+          const errorMessage =
+            err.response?.data?.message ||
+            err.response?.statusText ||   
+            err.message ||               
+            "Erro ao Atualizar.";        
+
+          toast.error(`Erro ao atualizar: ${errorMessage}`);
+          
+          console.error("Erro detalhado:", err);
+
+          throw new Error(errorMessage);
         }        
         }
       }
@@ -244,7 +267,7 @@ export default function IncluirQuestao() {
                     required
                     className={estiloGlobal.inputPesquisa} 
                     placeholder='Digite a Pergunta'
-                    value={nome_questao}
+                    value={questao}
                     onChange={(e) => {setNomeQuestao(e.target.value)}}
                     style={{ resize: 'vertical', width: '100%', height: '100px' }}
                 />
@@ -254,9 +277,9 @@ export default function IncluirQuestao() {
                 <textarea 
                     required
                     className={estiloGlobal.inputPesquisa} 
-                    placeholder='Digite a Pergunta'
-                    value={nome_questao}
-                    onChange={(e) => {setNomeQuestao(e.target.value)}}
+                    placeholder='Digite a alternativa A'
+                    value={alternativa_A}
+                    onChange={(e) => {setAlternativaA(e.target.value)}}
                     style={{ resize: 'vertical', width: '100%', height: '100px' }}
                 />
               </div>
@@ -265,9 +288,9 @@ export default function IncluirQuestao() {
                 <textarea 
                     required
                     className={estiloGlobal.inputPesquisa} 
-                    placeholder='Digite a Pergunta'
-                    value={nome_questao}
-                    onChange={(e) => {setNomeQuestao(e.target.value)}}
+                    placeholder='Digite a alternativa B'
+                    value={alternativa_B}
+                    onChange={(e) => {setAlternativaB(e.target.value)}}
                     style={{ resize: 'vertical', width: '100%', height: '100px' }}
                 />
               </div>
@@ -276,9 +299,9 @@ export default function IncluirQuestao() {
                 <textarea 
                     required
                     className={estiloGlobal.inputPesquisa} 
-                    placeholder='Digite a Pergunta'
-                    value={nome_questao}
-                    onChange={(e) => {setNomeQuestao(e.target.value)}}
+                    placeholder='Digite a alternativa C'
+                    value={alternativa_C}
+                    onChange={(e) => {setAlternativaC(e.target.value)}}
                     style={{ resize: 'vertical', width: '100%', height: '100px' }}
                 />
               </div>
@@ -287,15 +310,19 @@ export default function IncluirQuestao() {
                 <textarea 
                     required
                     className={estiloGlobal.inputPesquisa} 
-                    placeholder='Digite a Pergunta'
-                    value={nome_questao}
-                    onChange={(e) => {setNomeQuestao(e.target.value)}}
+                    placeholder='Digite a alternativa D'
+                    value={alternativa_D}
+                    onChange={(e) => {setAlternativaD(e.target.value)}}
                     style={{ resize: 'vertical', width: '100%', height: '100px' }}
                 />
               </div>
               <div>
                 <h4>Correta?</h4>
-                <select className={estiloGlobal.inputPesquisaSelect}>
+                <select 
+                  className={estiloGlobal.inputPesquisaSelect}
+                  value={correta}
+                  onChange={(e) => {setCorreta(e.target.value)}}
+                >
                   <option value='A'>A</option>
                   <option value='B'>B</option>
                   <option value='C'>C</option>
@@ -307,9 +334,9 @@ export default function IncluirQuestao() {
                 <textarea 
                     required
                     className={estiloGlobal.inputPesquisa} 
-                    placeholder='Digite a Pergunta'
-                    value={nome_questao}
-                    onChange={(e) => {setNomeQuestao(e.target.value)}}
+                    placeholder='Digite a Observação'
+                    value={observacao}
+                    onChange={(e) => {setObservacao(e.target.value)}}
                     style={{ resize: 'vertical', width: '100%', height: '100px' }}
                 />
               </div>

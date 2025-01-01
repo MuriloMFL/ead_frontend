@@ -19,20 +19,35 @@ export default function IncluirUsuario() {
   const [id_franquia, setIdFranquia]               = useState<string>('');
   const [tipo_usuario, setTipoUsuario]             = useState<string>('');
   const [franquia, setFranquia]                    = useState<FranquiaProps[]>([]);
-  const userInfo = useUserInfo();
-  const router = useRouter();
+  const userInfo                                   = useUserInfo();
+  const router                                     = useRouter();
 
-    useEffect (() => {
-      const cookies = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('id_usuario='))
-        ?.split('=')[1]
-        setIdUsuario(cookies || null);
-        
-        if(cookies){
-          detalharusuario(cookies)
-        }
-    }, [])
+  const selecionarFranquia = async () => {
+    const filtros = {
+      status: true,
+      id_franquia: userInfo?.id_franquia,
+    };
+    const franquia = await buscaDados('/listarfranquia', filtros);
+    setFranquia(franquia);
+  };
+
+  useEffect(() => {
+      if(userInfo?.id_franquia) {
+        selecionarFranquia();
+      }
+  }, [userInfo]);
+
+  useEffect (() => {
+    const cookies = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('id_usuario='))
+      ?.split('=')[1]
+      setIdUsuario(cookies || null);
+      
+      if(cookies){
+        detalharusuario(cookies)
+      }
+  }, [])
 
     async function detalharusuario(id_usuario: string){
       const token = await getCookieServer();
@@ -60,7 +75,7 @@ export default function IncluirUsuario() {
       }
     }
 
-    async function btngravar(){
+async function btngravar(){
         
         if(!id_usuario){
           const token = await getCookieServer();
@@ -113,21 +128,6 @@ export default function IncluirUsuario() {
         }        
         }
       }
-
-    const selecionarFranquia = async () => {
-      const filtros = {
-        status: true,
-        id_franquia: userInfo?.id_franquia,
-      };
-      const franquia = await buscaDados('/listarfranquia', filtros);
-      setFranquia(franquia);
-    };
-
-    useEffect(() => {
-        if(userInfo?.id_franquia) {
-          selecionarFranquia();
-        }
-    }, [userInfo]);
 
     const btnCancelar = () => {
       document.cookie = "id_usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
@@ -184,12 +184,8 @@ export default function IncluirUsuario() {
                     </option>
                     <option value='TECNICO'>TECNICO</option>
                     <option value='SUPERVISOR'>SUPERVISOR</option>
-                    {id_franquia === '1' && (
-                      <>
-                        <option value="CQS">CQS</option>
-                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
-                      </>
-                    )}
+                    {String(id_franquia) === "1" && <option value="CQS">CQS</option>}
+                    {String(id_franquia) === "1" && <option value="ADMINISTRADOR">ADMINISTRADOR</option>}
                   </select>
                 </div>
                 </div>

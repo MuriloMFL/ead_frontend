@@ -10,21 +10,23 @@ import { excluirDados } from '@/servicos/excluir'
 export default function CadastrarQuestoes(){
   const [id_questao, setIdQuestao]  = useState<string | null>(null)
   const [questoes, setNomeQuestao]  = useState<string>('')
-  const [status, setStatus] = useState<string>('true')
-  const [questao, setQuestao] = useState<QuestaoProps[]>([])
+  const [status, setStatus]         = useState<string>('true')
+  const [questao, setQuestao]       = useState<QuestaoProps[]>([])
   const router = useRouter();
 
-    const handleincluir = () => {
-      document.cookie = "id_questao=; path=/; expires:Thu , 1 Jan 1970 00:00:00"
-      setIdQuestao(null)
-      router.push('/cadastros/questoes/incluir')
-    }
+  const handleIncluir = () => {
+    document.cookie = "id_questao=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    setIdQuestao(null);
+    setTimeout(() => {
+        router.push('/cadastros/questoes/incluir');
+    }, 100); 
+};
     const handleExcluir = async (id_questao: number) => {
       const response = await excluirDados('/trocarstatusquestao', {id_questao})
       handlebuscar()
     }
     const handleAlterar = (id_questao: number) =>{
-      document.cookie = `id_questao=${id_questao} max-age=86000`
+      document.cookie = `id_questao=${id_questao}; max-age=86000;`
       router.push('/cadastros/questoes/incluir')
     }
 
@@ -51,7 +53,7 @@ export default function CadastrarQuestoes(){
             </div>
             <div className={estiloGlobal.barraFuncoes}>
           <div>
-            <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={handleincluir}>
+            <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={handleIncluir}>
               Incluir
             </button>
             <button className={`${estiloGlobal.btn} ${estiloGlobal.imprimir}`} onClick={() => window.print()}>Imprimir</button>
