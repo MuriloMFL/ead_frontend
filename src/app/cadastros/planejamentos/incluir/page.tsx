@@ -21,21 +21,34 @@ export default function IncluirSubModulo() {
   const [sistema, setSistema]                      = useState<SistemaProps[]>([]);
   const [modulo, setModulo]                        = useState<ModuloProps[]>([]);
   const [submodulo, setSubModulo]                  = useState<SubModuloProps[]>([]);
-  const router = useRouter();
+  const [id_usuario, setIDUsuario]                 = useState<string>();
+  const [modulo_novo,setModuloNovo]                = useState<string>('false');
+  const [previsao_inicio,setPrevisaoInicio]        = useState<string>('');
+  const [previsao_fim,serPrevisaoFim]              = useState<string>('');
+  const [etapa_elicitacao,setEtapaElicitacao]      = useState<string>('false');
+  const [etapa_roteiro,setEtapaRoteiro]            = useState<string>('false');
+  const [etapa_video,setEtapaVideo]                = useState<string>('false');
+  const [etapa_validacao,setEtapaValidacao]        = useState<string>('false');
+  const [etapa_finalizado,setEtapaFinalizado]      = useState<string>('false');
+  const [proposta,setProposta]                     = useState<string>();
+  const [roteiro,setRoteiro]                       = useState<string>();
+  const [impedimentos,setImpedimentos]             = useState<string>();
+  const [observacoes,setObservacao]                = useState<string>();
+  const router                                     = useRouter();
 
     useEffect (() => {
       const cookies = document.cookie
         .split('; ')
-        .find(row => row.startsWith('id_planejamento'))
+        .find(row => row.startsWith('id_planejamento='))
         ?.split('=')[1]
         setIdPlanejamento(cookies || null);
 
         if(cookies){
-          detalharSubmodulo(cookies)
+          detalharplanejamento(cookies)
         }
     }, [])
     
-    async function detalharSubmodulo(id_planejamento: string){
+    async function detalharplanejamento(id_planejamento: string){
       const token = await getCookieServer();
       try {
         const { data } = await api.get(`/detalharplanejamento/${id_planejamento}`, {
@@ -46,9 +59,23 @@ export default function IncluirSubModulo() {
   
         if (data) {
           setIdPlanejamento(data.id_planejamento || "")
+          setNomePlanejamento(data.nome_planejamento || "");
           setIdSubmodulo(data.id_submodulo || "");
           setIdSistema(data.id_sistema || "")
           setidModulo(data.id_modulo || "")
+          setIDUsuario(data.id_usuario || "")
+          setModuloNovo(data.modulo_novo || "")
+          //setPrevisaoInicio(data.previsao_inicio || "")
+          //serPrevisaoFim(data.previsao_fim || "")
+          setEtapaElicitacao(data.etapa_elicitacao || "")
+          setEtapaRoteiro(data.etapa_roteiro || "")
+          setEtapaVideo(data.etapa_video || "")
+          setEtapaValidacao(data.etapa_validacao || "")
+          setEtapaFinalizado(data.etapa_finalizado || "")
+          setProposta(data.proposta || "")
+          setRoteiro(data.roteiro || "")
+          setImpedimentos(data.impedimentos || "")
+          setObservacao(data.observacoes || "")
         } else {
           toast.warn("Nenhum Submodulo encontrada para o ID fornecido.");
         }
@@ -65,7 +92,24 @@ export default function IncluirSubModulo() {
           try {
             await api.post(
               "/criarplanejamento",
-              { nome_planejamento, id_sistema, id_modulo,  },
+              { 
+                nome_planejamento,
+                id_sistema,
+                id_modulo,
+                id_submodulo,
+                id_usuario,
+                modulo_novo,
+                previsao_inicio,
+                previsao_fim,
+                etapa_elicitacao,
+                etapa_roteiro,
+                etapa_video,
+                etapa_validacao,
+                etapa_finalizado,
+                proposta,
+                roteiro,
+                impedimentos,
+                observacoes},
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -73,16 +117,33 @@ export default function IncluirSubModulo() {
               }
             );
             toast.success("Gravado com sucesso.");
-            router.push("../../cadastros/submodulos");
+            router.push("../../cadastros/planejamentos");
           } catch {
-            new Error('Erro');
+            console.error
           }
         }else {
         try {
           const token = await getCookieServer();
           await api.put(
-            "/atualizarsubmodulo",
-            { nome_planejamento, id_submodulo, id_sistema, id_modulo},
+            "/atualizarplanejamento",
+            { id_planejamento,
+              nome_planejamento,
+              id_sistema,
+              id_modulo,
+              id_submodulo,
+              id_usuario,
+              modulo_novo,
+              previsao_inicio,
+              previsao_fim,
+              etapa_elicitacao,
+              etapa_roteiro,
+              etapa_video,
+              etapa_validacao,
+              etapa_finalizado,
+              proposta,
+              roteiro,
+              impedimentos,
+              observacoes},
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -91,9 +152,10 @@ export default function IncluirSubModulo() {
           );
     
           toast.success("Gravado com sucesso.");
-          router.push("../../cadastros/submodulos");
-        } catch (err: any) {
-          throw new Error('Erro ao atualizar SubModulo')
+          router.push("../../cadastros/planejamentos");
+        } catch (err: any) {console.error
+          throw new Error('Erro ao atualizar Planejamento')
+          
         }        
         }
       }
@@ -237,6 +299,8 @@ export default function IncluirSubModulo() {
                       type='date'
                       name='data-inicio'
                       className={estiloGlobal.inputPesquisa}
+                    //  value={String(previsao_inicio)}
+                    //  onChange={(e) => setPrevisaoInicio(e.target.value) }
                     />
                 </div>
                 <div>
@@ -260,8 +324,8 @@ export default function IncluirSubModulo() {
                     type="checkbox"  
                     className='' 
                     name='modulo_novo'
-                    value={nome_planejamento}
-                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    value={modulo_novo}
+                    onChange={(e) => {setModuloNovo(e.target.value)}}
                   />
                   <label> Modulo Novo?  </label>
                 </div>
@@ -270,9 +334,9 @@ export default function IncluirSubModulo() {
                   <input 
                     type="checkbox"  
                     className='' 
-                    name='modulo_novo'
-                    value={nome_planejamento}
-                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    name='etapa_elicitacao'
+                    value={etapa_elicitacao}
+                    onChange={(e) => {setEtapaElicitacao(e.target.value)}}
                   />
                   <label> Elicitação </label>
                 </div>
@@ -281,9 +345,9 @@ export default function IncluirSubModulo() {
                   <input 
                     type="checkbox"  
                     className='' 
-                    name='modulo_novo'
-                    value={nome_planejamento}
-                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    name='etapa_roteiro'
+                    value={etapa_roteiro}
+                    onChange={(e) => {setEtapaRoteiro(e.target.value)}}
                   />
                   <label> Roteiro </label>
                 </div>
@@ -292,9 +356,9 @@ export default function IncluirSubModulo() {
                   <input 
                     type="checkbox"  
                     className='' 
-                    name='modulo_novo'
-                    value={nome_planejamento}
-                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    name='etapa_video'
+                    value={etapa_video}
+                    onChange={(e) => {setEtapaVideo(e.target.value)}}
                   />
                   <label>Video</label>
                 </div>
@@ -303,9 +367,9 @@ export default function IncluirSubModulo() {
                   <input 
                     type="checkbox"  
                     className='' 
-                    name='modulo_novo'
-                    value={nome_planejamento}
-                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    name='etapa_validacao'
+                    value={etapa_validacao}
+                    onChange={(e) => {setEtapaValidacao(e.target.value)}}
                   />
                   <label>Validação</label>
                 </div>
@@ -314,9 +378,9 @@ export default function IncluirSubModulo() {
                   <input 
                     type="checkbox"  
                     className='' 
-                    name='modulo_novo'
-                    value={nome_planejamento}
-                    onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                    name='etapa_finalizado'
+                    value={etapa_finalizado}
+                    onChange={(e) => {setEtapaFinalizado(e.target.value)}}
                   />
                   <label>Finalizado</label>
                 </div>
@@ -330,8 +394,8 @@ export default function IncluirSubModulo() {
               required
               className={estiloLocal.inputPlanejamento}
               placeholder="Proposta"
-              value={nome_planejamento}
-              onChange={(e) => setNomePlanejamento(e.target.value)}
+              value={proposta}
+              onChange={(e) => setProposta(e.target.value)}
               style={{ resize: 'vertical', width: '100%', height: '100px' }}
             />
 
@@ -343,8 +407,8 @@ export default function IncluirSubModulo() {
               required
               className={estiloLocal.inputPlanejamento}
               placeholder="Impedimentos"
-              value={nome_planejamento}
-              onChange={(e) => setNomePlanejamento(e.target.value)}
+              value={impedimentos}
+              onChange={(e) => setImpedimentos(e.target.value)}
               style={{ resize: 'vertical', width: '100%', height: '100px'}}
             />
 
@@ -356,8 +420,8 @@ export default function IncluirSubModulo() {
               required
               className={estiloLocal.inputPlanejamento}
               placeholder="Observação Final"
-              value={nome_planejamento}
-              onChange={(e) => setNomePlanejamento(e.target.value)}
+              value={observacoes}
+              onChange={(e) => setObservacao(e.target.value)}
               style={{ resize: 'vertical', width: '100%', height: '100px' }}
             />
 
