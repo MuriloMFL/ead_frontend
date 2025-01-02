@@ -21,7 +21,7 @@ export default function IncluirSubModulo() {
   const [sistema, setSistema]                      = useState<SistemaProps[]>([]);
   const [modulo, setModulo]                        = useState<ModuloProps[]>([]);
   const [submodulo, setSubModulo]                  = useState<SubModuloProps[]>([]);
-  const [id_usuario, setIDUsuario]                 = useState<string>();
+  const [id_usuario, setIDUsuario]                 = useState<string>('1');
   const [modulo_novo,setModuloNovo]                = useState<string>('false');
   const [previsao_inicio,setPrevisaoInicio]        = useState<string>('');
   const [previsao_fim,serPrevisaoFim]              = useState<string>('');
@@ -31,7 +31,7 @@ export default function IncluirSubModulo() {
   const [etapa_validacao,setEtapaValidacao]        = useState<string>('false');
   const [etapa_finalizado,setEtapaFinalizado]      = useState<string>('false');
   const [proposta,setProposta]                     = useState<string>();
-  const [roteiro,setRoteiro]                       = useState<string>();
+  const [roteiro,setRoteiro]                       = useState<string>('.');
   const [impedimentos,setImpedimentos]             = useState<string>();
   const [observacoes,setObservacao]                = useState<string>();
   const router                                     = useRouter();
@@ -46,6 +46,7 @@ export default function IncluirSubModulo() {
         if(cookies){
           detalharplanejamento(cookies)
         }
+        toast(cookies)
     }, [])
     
     async function detalharplanejamento(id_planejamento: string){
@@ -87,7 +88,7 @@ export default function IncluirSubModulo() {
 
     async function btngravar(){
         
-        if(!id_submodulo){
+        if(!id_planejamento){
           const token = await getCookieServer();
           try {
             await api.post(
