@@ -222,11 +222,16 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
+  width: 100%;
 
   .checks{
     justify-content: space-between;
     display: flex;
+
   }
+
+
   .cabecalhoFormCadastro{
     border: 1px solid var(--bordas);
     border-radius: 4px;
@@ -256,8 +261,8 @@
   gap: 0.3em;
 
   div{
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 3px;
+    margin-bottom: 3px;
   }
 }
 

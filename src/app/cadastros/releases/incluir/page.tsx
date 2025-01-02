@@ -31,29 +31,31 @@ export default function IncluirRelease() {
           </div>
        </div>
 
-       <form className={`${estiloGlobal.formCadastro}  ${estiloGlobal.gridCadastros}`}>
-       <h4 className={estiloGlobal.cabecalhoFormCadastro}>Insira os dados da Release</h4>
-        <div>
-          <div className={estiloGlobal.checks}>
-          <div>
-              <label>Numero Release: </label>
-              <input 
-                type='number' 
-                className={estiloGlobal.inputPesquisa} 
-                placeholder='Numero'
-                style={{width: '130px', appearance: 'none', WebkitAppearance: 'none'}}
-              />
+       <form className={estiloGlobal.formCadastro}>
+          <div className={estiloGlobal.gridCadastros}>
+            <div className={estiloGlobal.checks}>
+              <div>
+                <label>Numero Release: </label>
+                <input 
+                  type='number' 
+                  className={estiloGlobal.inputPesquisa} 
+                  placeholder='Numero'
+                  style={{width: '130px', appearance: 'none', WebkitAppearance: 'none'}}
+                />
+              </div>
+
+             <div>
+              <label>Status: </label>
+              <select className={estiloGlobal.inputPesquisaSelect}>
+                <option value='true'>Finalizado</option>
+                <option value='false'>Editando</option>
+              </select>
             </div>
-            <div>
-             <label>Status: </label>
-             <select className={estiloGlobal.inputPesquisaSelect}>
-              <option value='true'>Finalizado</option>
-              <option value='false'>Editando</option>
-             </select>
+
             </div>
           </div>
 
-          <div style={{display: 'flex'}}>
+          <div className={estiloGlobal.gridCadastros}>
                 <div>
                   <label>Versão Gestores: </label>
                   <input 
@@ -94,9 +96,51 @@ export default function IncluirRelease() {
                   />
                 </div>
             </div>
-          </div>
-          <h4 className={estiloGlobal.cabecalhoFormCadastro}>Insira as alterações e correções</h4>
        </form>
+
+      <div className={estiloGlobal.barraFuncoes}>
+        <div>
+          <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`}>
+            Incluir
+          </button>          
+        </div>
+      </div>
+
+       <section className={estiloGlobal.grid}>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Sistema</th>
+                <th scope="col">Modulo</th>
+                <th scope="col">Submodulo</th>
+                <th scope="col" className="acoes">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+                  <tr className={estiloGlobal.griditens}>
+                  <td data-label="Nome">item.ID</td>
+                  <td data-label="Nome">item.nome_release</td>
+                  <td data-label="Versão Gestores">item.id_sistema</td>
+                  <td data-label="Versão GestorPDV">item.id_modulo</td>
+                  <td data-label="Versão SincData">item.id_submodulo</td>
+                  <td>
+                    <button 
+                        className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
+                        >Alterar
+                    </button>
+
+                    <button 
+                        className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`}
+                        
+                        >{"Excluir"}
+                    </button>
+                  </td>
+                  </tr>
+            </tbody>
+          </table>
+        </section> 
 
       </main>
     </>
