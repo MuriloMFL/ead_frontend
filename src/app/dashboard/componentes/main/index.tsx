@@ -4,14 +4,13 @@ import estiloLocal   from "./page.module.scss"
 import { useState, useEffect } from "react";
 import { ReleaseProps } from "@/lib/release.type";
 import { buscaDados } from "@/servicos/buscar";
-import { toast } from "react-toastify";
 
 export function DashboardPrincipal(){
     const [status, setStatus] = useState<string>('true')
     const [id_release, setIdRelease] = useState<string | null>(null)
     const [nome_release, setNomeRelease] = useState<string>('')
     const [release, setRelease] = useState<ReleaseProps[]>([]) 
-    
+
     const handlebuscar = async () => {
         const filtros = {
         status : true,

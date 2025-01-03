@@ -53,6 +53,10 @@ const navLinks = userInfo && isValidUserType(userInfo.tipo_usuario) ? permission
                     <table>
                     <tbody>
                         <tr>
+                            <td><label>ID: </label></td>
+                            <td><input type='text' className={estiloGlobal.inputPesquisa} readOnly value={userInfo?.id || ""}/></td>
+                        </tr>
+                        <tr>
                             <td><label>Nome: </label></td>
                             <td><input type='text' className={estiloGlobal.inputPesquisa} readOnly value={userInfo?.nome_usuario || ""}/></td>
                         </tr>

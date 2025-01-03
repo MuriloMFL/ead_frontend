@@ -11,6 +11,7 @@ import { buscaDados } from '@/servicos/buscar';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { SubModuloProps } from '@/lib/submodulo.type';
+import useUserInfo from '@/servicos/useUserInfo';
 
 export default function IncluirSubModulo() {
   const [id_planejamento, setIdPlanejamento]       = useState<string | null>(null);
@@ -21,20 +22,28 @@ export default function IncluirSubModulo() {
   const [sistema, setSistema]                      = useState<SistemaProps[]>([]);
   const [modulo, setModulo]                        = useState<ModuloProps[]>([]);
   const [submodulo, setSubModulo]                  = useState<SubModuloProps[]>([]);
-  const [id_usuario, setIDUsuario]                 = useState<string>('1');
-  const [modulo_novo,setModuloNovo]                = useState<string>('false');
+  const [id_usuario, setIDUsuario]                 = useState<string | null>('2');
+  const [modulo_novo,setModuloNovo]                = useState<boolean>(false);
   const [previsao_inicio,setPrevisaoInicio]        = useState<string>('');
-  const [previsao_fim,serPrevisaoFim]              = useState<string>('');
-  const [etapa_elicitacao,setEtapaElicitacao]      = useState<string>('false');
-  const [etapa_roteiro,setEtapaRoteiro]            = useState<string>('false');
-  const [etapa_video,setEtapaVideo]                = useState<string>('false');
-  const [etapa_validacao,setEtapaValidacao]        = useState<string>('false');
-  const [etapa_finalizado,setEtapaFinalizado]      = useState<string>('false');
+  const [previsao_fim,setPrevisaoFim]              = useState<string>('');
+  const [etapa_elicitacao,setEtapaElicitacao]      = useState<boolean>(false);
+  const [etapa_roteiro,setEtapaRoteiro]            = useState<boolean>(false);
+  const [etapa_video,setEtapaVideo]                = useState<boolean>(false);
+  const [etapa_validacao,setEtapaValidacao]        = useState<boolean>(false);
+  const [etapa_finalizado,setEtapaFinalizado]      = useState<boolean>(false);
   const [proposta,setProposta]                     = useState<string>();
   const [roteiro,setRoteiro]                       = useState<string>('.');
   const [impedimentos,setImpedimentos]             = useState<string>();
   const [observacoes,setObservacao]                = useState<string>();
   const router                                     = useRouter();
+  const informacao_usuario                         = useUserInfo();
+
+  useEffect(() => {
+    if (informacao_usuario?.id) {
+      setIDUsuario(String(informacao_usuario.id) ?? null);
+      toast(informacao_usuario.id)
+    }
+  }, [informacao_usuario]);
 
     useEffect (() => {
       const cookies = document.cookie
@@ -46,7 +55,6 @@ export default function IncluirSubModulo() {
         if(cookies){
           detalharplanejamento(cookies)
         }
-        toast(cookies)
     }, [])
     
     async function detalharplanejamento(id_planejamento: string){
@@ -66,8 +74,8 @@ export default function IncluirSubModulo() {
           setidModulo(data.id_modulo || "")
           setIDUsuario(data.id_usuario || "")
           setModuloNovo(data.modulo_novo || "")
-          //setPrevisaoInicio(data.previsao_inicio || "")
-          //serPrevisaoFim(data.previsao_fim || "")
+          setPrevisaoInicio(data.previsao_inicio ? data.previsao_inicio.split("T")[0] : "");
+          setPrevisaoFim(data.previsao_fim ? data.previsao_fim.split("T")[0] : "");
           setEtapaElicitacao(data.etapa_elicitacao || "")
           setEtapaRoteiro(data.etapa_roteiro || "")
           setEtapaVideo(data.etapa_video || "")
@@ -87,7 +95,7 @@ export default function IncluirSubModulo() {
     }
 
     async function btngravar(){
-        
+        toast(informacao_usuario?.id)
         if(!id_planejamento){
           const token = await getCookieServer();
           try {
@@ -216,6 +224,7 @@ export default function IncluirSubModulo() {
           <div>
             <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={btngravar}>Gravar</button>
             <button className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`} onClick={btnCancelar}>Cancelar</button>
+            <button className={`${estiloGlobal.btn} ${estiloGlobal.imprimir}`} onClick={() => window.print()}>Imprimir</button>
           </div>
        </div>
 
@@ -300,8 +309,8 @@ export default function IncluirSubModulo() {
                       type='date'
                       name='data-inicio'
                       className={estiloGlobal.inputPesquisa}
-                    //  value={String(previsao_inicio)}
-                    //  onChange={(e) => setPrevisaoInicio(e.target.value) }
+                      value={String(previsao_inicio)}
+                      onChange={(e) => setPrevisaoInicio(e.target.value) }
                     />
                 </div>
                 <div>
@@ -310,6 +319,8 @@ export default function IncluirSubModulo() {
                     type='date'
                     name='data-previsao'
                     className={estiloGlobal.inputPesquisa}
+                    value={String(previsao_fim)}
+                    onChange={(e) => setPrevisaoFim(e.target.value) }
                   />
               </div>
                 </div>
@@ -325,8 +336,8 @@ export default function IncluirSubModulo() {
                     type="checkbox"  
                     className='' 
                     name='modulo_novo'
-                    value={modulo_novo}
-                    onChange={(e) => {setModuloNovo(e.target.value)}}
+                    checked={modulo_novo}
+                    onChange={(e) => {setModuloNovo(e.target.checked)}}
                   />
                   <label> Modulo Novo?  </label>
                 </div>
@@ -336,8 +347,8 @@ export default function IncluirSubModulo() {
                     type="checkbox"  
                     className='' 
                     name='etapa_elicitacao'
-                    value={etapa_elicitacao}
-                    onChange={(e) => {setEtapaElicitacao(e.target.value)}}
+                    checked={etapa_elicitacao}
+                    onChange={(e) => {setEtapaElicitacao(e.target.checked)}}
                   />
                   <label> Elicitação </label>
                 </div>
@@ -347,8 +358,8 @@ export default function IncluirSubModulo() {
                     type="checkbox"  
                     className='' 
                     name='etapa_roteiro'
-                    value={etapa_roteiro}
-                    onChange={(e) => {setEtapaRoteiro(e.target.value)}}
+                    checked={etapa_roteiro}
+                    onChange={(e) => {setEtapaRoteiro(e.target.checked)}}
                   />
                   <label> Roteiro </label>
                 </div>
@@ -358,8 +369,8 @@ export default function IncluirSubModulo() {
                     type="checkbox"  
                     className='' 
                     name='etapa_video'
-                    value={etapa_video}
-                    onChange={(e) => {setEtapaVideo(e.target.value)}}
+                    checked={etapa_video}
+                    onChange={(e) => {setEtapaVideo(e.target.checked)}}
                   />
                   <label>Video</label>
                 </div>
@@ -369,8 +380,8 @@ export default function IncluirSubModulo() {
                     type="checkbox"  
                     className='' 
                     name='etapa_validacao'
-                    value={etapa_validacao}
-                    onChange={(e) => {setEtapaValidacao(e.target.value)}}
+                    checked={etapa_validacao}
+                    onChange={(e) => {setEtapaValidacao(e.target.checked)}}
                   />
                   <label>Validação</label>
                 </div>
@@ -380,8 +391,8 @@ export default function IncluirSubModulo() {
                     type="checkbox"  
                     className='' 
                     name='etapa_finalizado'
-                    value={etapa_finalizado}
-                    onChange={(e) => {setEtapaFinalizado(e.target.value)}}
+                    checked={etapa_finalizado}
+                    onChange={(e) => {setEtapaFinalizado(e.target.checked)}}
                   />
                   <label>Finalizado</label>
                 </div>
