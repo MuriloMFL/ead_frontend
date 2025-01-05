@@ -24,6 +24,7 @@ export default function IncluirProvas() {
   const [modulo, setModulo]                        = useState<ModuloProps[]>([]);
   const [submodulo, setSubModulo]                  = useState<SubModuloProps[]>([]);
   const [questoes, setQuestoes]                    = useState<QuestaoProps[]>([])
+  const [questoesP, setquestoesP]                  = useState<QuestaoProps[]>([])
   const router                                     = useRouter();
 
     useEffect (() => {
@@ -115,52 +116,81 @@ export default function IncluirProvas() {
       }
 
       async function btnIncluirQuestao() {
+        
         if(!nome_prova || !id_sistema || !id_modulo || !id_submodulo){
           toast("Dados do cabeçalho devem ser informados")
           return
         }
-
-        try {
-          if(!id_prova){
-            const token = await getCookieServer();
-            try {
-              const response = await api.post(
-                "/criarprova",
-                { 
-                  nome_prova,
-                  id_sistema,
-                  id_modulo,
-                  id_submodulo,},
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                }
-              );
-              setIdprova(response.data.id_prova)
-              toast.success("Gravado com sucesso.");
-
-            } catch {
-              console.error
-            }
-          }   
-        } catch (error) {
-          toast('Erro ao gravar Prova')
+        
+      try {
+        const token = await getCookieServer();
+        if(!id_prova){
+          try {
+            const response = await api.post(
+              "/criarprova",
+              { 
+                nome_prova,
+                id_sistema,
+                id_modulo,
+                id_submodulo,},
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            setIdprova(response.data.id_prova)
+            toast.success("Gravado com sucesso.");
+          } catch {
+            console.error
+          }
         }
+        
+        try {
+          toast(id_questao)
+          await api.put('/atualizarquestao', {
+            id_questao : id_questao,
+            id_prova   : id_prova
+          }, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+
+        } catch (error) {
+          toast('Erro ao incluir questão na prova')
+        }
+      } catch (error) {
+        toast('Erro ao gravar Prova')
       }
+      }
+
+    const questoesdaprova = async () => {
+      const filtros = {
+        id_prova : id_prova
+      }
+      const questoesdessaProva = await buscaDados('/listarquestao', filtros);
+      setquestoesP(questoesdessaProva)
+    }
+    useEffect ( ()=> {
+      if(id_prova){
+        questoesdaprova()
+      }
+    }, [id_prova])
 
     const selecionarquestao = async () => {
       const filtros = {
         id_prova : null,
         id_aula  : null
       };
-      const questoes = await buscaDados('/listarquestao', filtros);
+      const questoes = await buscaDados('/listarquestaosemprova', filtros);
       setQuestoes(questoes)
+      setIdQuestao(questoes.id_questao)
     }
     useEffect(() => {
       selecionarquestao();
     }, []);
-    
+
     const selecionarSistema = async () => {
       const filtros = {
         status: true,
@@ -288,11 +318,16 @@ export default function IncluirProvas() {
        </form>
        <div className={estiloGlobal.barraFuncoes}>
         <div>
-          <select className={estiloLocal.inputPesquisaSelectForm}>
+          <select className={estiloLocal.inputPesquisaSelectForm}
+          value={id_questao}
+          onChange={(e) => setIdQuestao(e.target.value)}>
             <option value='' disabled>Selecione a questão</option>
             {
               questoes.map ( (item) => (
-                <option value={item.id_questao} key={item.id_questao}>{item.questoes}</option>
+                <option 
+                value={item.id_questao} 
+                key={item.id_questao}
+                >{item.questoes}</option>
               ))
             }
             
@@ -316,12 +351,14 @@ export default function IncluirProvas() {
               </tr>
             </thead>
             <tbody>
-                  <tr className={estiloGlobal.griditens}>
-                  <td data-label="Nome">item.ID</td>
-                  <td data-label="Nome">item.nome_release</td>
-                  <td data-label="Versão Gestores">item.id_sistema</td>
-                  <td data-label="Versão GestorPDV">item.id_modulo</td>
-                  <td data-label="Versão SincData">item.id_submodulo</td>
+              {
+                questoesP.map( (item) => (
+                  <tr className={estiloGlobal.griditens} key={item.id_questao}>
+                  <td data-label="Nome">{item.id_questao}</td>
+                  <td data-label="Nome">{item.questoes}</td>
+                  <td data-label="Versão Gestores">{item.nome_sistema}</td>
+                  <td data-label="Versão GestorPDV">{item.nome_modulo}</td>
+                  <td data-label="Versão SincData">{item.nome_submodulo}</td>
                   <td>
                     <button 
                         className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`}  
@@ -335,6 +372,9 @@ export default function IncluirProvas() {
                     </button>
                   </td>
                   </tr>
+                ))
+              }
+
             </tbody>
           </table>
         </section> 
