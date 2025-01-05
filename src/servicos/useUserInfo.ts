@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 type UserInfo = {
-    id: string;
+    id_usuario: string;
     nome_usuario: string;
     tipo_usuario: string;
     login: string;

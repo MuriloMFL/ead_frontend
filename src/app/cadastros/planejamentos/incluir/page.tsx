@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import { SubModuloProps } from '@/lib/submodulo.type';
 import useUserInfo from '@/servicos/useUserInfo';
 
-export default function IncluirSubModulo() {
+export default function IncluirPLanejamento() {
   const [id_planejamento, setIdPlanejamento]       = useState<string | null>(null);
   const [nome_planejamento, setNomePlanejamento]   = useState<string>('');
   const [id_submodulo, setIdSubmodulo]             = useState<string>('');
@@ -22,7 +22,7 @@ export default function IncluirSubModulo() {
   const [sistema, setSistema]                      = useState<SistemaProps[]>([]);
   const [modulo, setModulo]                        = useState<ModuloProps[]>([]);
   const [submodulo, setSubModulo]                  = useState<SubModuloProps[]>([]);
-  const [id_usuario, setIDUsuario]                 = useState<string | null>('2');
+  const [id_usuario, setIDUsuario]                 = useState<string | null>('');
   const [modulo_novo,setModuloNovo]                = useState<boolean>(false);
   const [previsao_inicio,setPrevisaoInicio]        = useState<string>('');
   const [previsao_fim,setPrevisaoFim]              = useState<string>('');
@@ -39,9 +39,8 @@ export default function IncluirSubModulo() {
   const informacao_usuario                         = useUserInfo();
 
   useEffect(() => {
-    if (informacao_usuario?.id) {
-      setIDUsuario(String(informacao_usuario.id) ?? null);
-      toast(informacao_usuario.id)
+    if (informacao_usuario?.id_usuario) {
+      setIDUsuario(String(informacao_usuario.id_usuario) ?? null);
     }
   }, [informacao_usuario]);
 
@@ -95,7 +94,6 @@ export default function IncluirSubModulo() {
     }
 
     async function btngravar(){
-        toast(informacao_usuario?.id)
         if(!id_planejamento){
           const token = await getCookieServer();
           try {
