@@ -24,14 +24,15 @@ export default function IncluirRelease() {
   const [id_usuario, setIdUsuario]                  = useState<string>('')
   const [data_inclusao, setDataInicio]              = useState<string>('')
   const [finalizado, setFinalizado]                 = useState<string>('false')
+
   const informacao_usuario                          = useUserInfo();
   const router = useRouter();
   const [exibirInclusaoItem, setExibirInclusaoItem] = useState(false)
 
   const [id_item_release, setIdItemRelease]         = useState<string | null>(null)
-  const [id_sistema, setIdSistema]                  = useState<string | null>(null)
-  const [id_modulo, setIdModulo]                    = useState<string | null>(null)
-  const [id_submodulo, setIdSubmodulo]              = useState<string | null>(null)
+  const [id_submodulo, setIdSubmodulo]             = useState<string>('');
+  const [id_sistema, setIdSistema]                 = useState<string>('');
+  const [id_modulo, setidModulo]                   = useState<string>('');
   const [sistema, setSistema]                       = useState<SistemaProps[]>([]);
   const [modulo, setModulo]                         = useState<ModuloProps[]>([]);
   const [submodulo, setSubModulo]                   = useState<SubModuloProps[]>([]);
@@ -70,7 +71,7 @@ export default function IncluirRelease() {
       setVersaoGestores(data.versao_gestores || "")
       setVersaoSincdata(data.versao_sincdata || "")
       setIdUsuario(informacao_usuario?.id_usuario || "") 
-      setFinalizado(String(data.finalizado) || "") 
+      setFinalizado(data.finalizado || false) 
     }else {
       toast('Erro ao buscar informações.')
     }
@@ -91,9 +92,9 @@ export default function IncluirRelease() {
     if(data) {
       setIdItemRelease(data.id_item_release || "")
       setNomeItemRelease(data.nome_release || "")
-      setIdSistema(data.id_release || "")
-      setIdModulo(data.id_modulo || "")
-      setIdSubmodulo(data.submodulo || "")
+      setIdSistema(data.id_sistema || "")
+      setidModulo(data.id_modulo || null)
+      setIdSubmodulo(data.id_submodulo || "")
       setcorrecao(data.correcao || "")
       setalteracao(data.alteracao || "")
       setobservacao(data.observacao || "")
@@ -103,6 +104,17 @@ export default function IncluirRelease() {
     console.error(err);  
   }
   }
+
+  const limparCampos = () => {
+    setIdItemRelease(null);
+    setIdSistema('');
+    setidModulo('');
+    setIdSubmodulo('');
+    setNomeItemRelease('');
+    setcorrecao(false);
+    setalteracao(false);
+    setobservacao('');
+  };
 
   const handlebuscar = async () => {
     const filtros = {
@@ -118,21 +130,101 @@ export default function IncluirRelease() {
     }
   },[id_release])
 
-  const btnIncluirItem = () => {
+  const btnIncluirItem = async () => {
+    if(!id_release){
+      const token = await getCookieServer();
+      
+      try {
+        await api.post('/criarrelease', {
+          numero_release , 
+          versao_gestores, 
+          versao_sincdata, 
+          versao_gestorpdv, 
+          versao_balcao,
+          id_usuario : informacao_usuario?.id_usuario,
+          finalizado : Boolean(finalizado)
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        toast('Cadastrado com Sucesso')
+      } catch (error) {
+        toast( 'Erro ao cadastrar Release')
+        throw new Error('Erro ao cadastrar Release')
+      }
+    }
+
     setExibirInclusaoItem(true)
+    limparCampos();
   }
 
-  const btnGravarItem = () => {
+  const btnGravarItem = async () => {
+
+    if(!id_item_release){
+    const token = await getCookieServer();
+    try {
+      await api.post("/criarreleaseitem", {
+        nome_release : nomeItemRelease, 
+        numero_release, 
+        id_release, 
+        id_sistema, 
+        id_modulo, 
+        id_submodulo,
+        correcao, 
+        alteracao, 
+        observacao
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }) 
+      toast.success("Gravado com sucesso.");
+    } catch (error) {
+      toast('Erro ao criar Item da Release')
+      throw new Error('Erro ao criar Item da Release')
+      
+    }
+    }else {
+      try {
+        const token = await getCookieServer();
+        await api.put("/atualizarreleaseitem", {
+          id_item_release,
+          nome_release : nomeItemRelease, 
+          numero_release, 
+          id_release, 
+          id_sistema, 
+          id_modulo, 
+          id_submodulo,
+          correcao, 
+          alteracao, 
+          observacao
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })    
+        toast.success("Atualizado com sucesso."); 
+      } catch (error) {
+        toast('Erro o atualizar Item da Release')
+        throw new Error('Erro ao atualizar Item da Release')
+      }
+ 
+    }
     setExibirInclusaoItem(false)
+    limparCampos();
+    handlebuscar();
   }
 
   const btnAlterarItem = (id_item_release: string) => {
     setExibirInclusaoItem(true)
     detalharitem(String(id_item_release))
+ 
   }
 
   const btnCancelarInclusaoItem = () => {
     setExibirInclusaoItem(false)
+    limparCampos();
   }
 
   const btnGravar = () =>{
@@ -180,7 +272,6 @@ export default function IncluirRelease() {
     useEffect(() => {
       selecionarSubModulo();
     }, [id_modulo]);
-
   return (
     <>
       <Header />
@@ -205,6 +296,7 @@ export default function IncluirRelease() {
               <div>
                 <label>Numero Release: </label>
                 <input 
+                  required={true}
                   type='number' 
                   className={estiloGlobal.inputPesquisa} 
                   placeholder='Numero'
@@ -218,7 +310,7 @@ export default function IncluirRelease() {
               <label>Modo: </label>
               <select 
                 className={estiloGlobal.inputPesquisaSelect} 
-                value={finalizado}
+                value={String(finalizado)}
                 onChange={(e) => setFinalizado((e).target.value)}
               >
                 <option value='true'>Finalizado</option>
@@ -233,6 +325,7 @@ export default function IncluirRelease() {
                 <div>
                   <label>Versão Gestores: </label>
                   <input 
+                  required
                     type='text' 
                     className={estiloGlobal.inputPesquisa} 
                     placeholder='Versão Gestores'
@@ -245,6 +338,7 @@ export default function IncluirRelease() {
                 <div>
                   <label>Versão GestorPDV: </label>
                   <input 
+                  required
                     type='text' 
                     className={estiloGlobal.inputPesquisa} 
                     placeholder='Versão GestorPDV'
@@ -257,6 +351,7 @@ export default function IncluirRelease() {
                 <div>
                 <label>Versão Sincdata: </label>
                 <input 
+                required
                   type='text' 
                   className={estiloGlobal.inputPesquisa} 
                   placeholder='Versão Sincdata'
@@ -269,6 +364,7 @@ export default function IncluirRelease() {
                 <div>
                   <label>Versão balcão: </label>
                   <input 
+                  required
                     type='text' 
                     className={estiloGlobal.inputPesquisa} 
                     placeholder='Versão balcão'
@@ -355,7 +451,7 @@ export default function IncluirRelease() {
                   required
                   className={estiloLocal.inputPesquisaSelectForm}
                   name='id_sistema'
-                  value={String(id_sistema)}
+                  value={id_sistema}
                   onChange={(e) => {setIdSistema(e.target.value)}}
                  >
                   <option value="" disabled>
@@ -372,8 +468,8 @@ export default function IncluirRelease() {
                   required
                   className={estiloLocal.inputPesquisaSelectForm}
                   name='id_modulo'
-                  value={ String(id_modulo)}
-                  onChange={(e) => {setIdModulo(e.target.value)}}
+                  value={id_modulo}
+                  onChange={(e) => {setidModulo(e.target.value)}}
                   >
                   <option value="" disabled>
                     Selecione um Modulo
@@ -389,7 +485,7 @@ export default function IncluirRelease() {
                   required
                   className={estiloLocal.inputPesquisaSelectForm}
                   name='id_submodulo'
-                  value={String(id_submodulo)}
+                  value={id_submodulo}
                   onChange={(e) => {setIdSubmodulo(e.target.value)}}
                   >
                   <option value="" disabled>
@@ -414,28 +510,26 @@ export default function IncluirRelease() {
                 />
               </div>
 
-      
-                <div>
-                  <input 
-                  type='checkbox'
-                  name='alteracao'
-                  checked={alteracao} 
-                  onChange={(e) => {setalteracao(e.target.checked)}}
-                  />
-                  <label style={{margin: '3px'}}>Alteração</label>
-                  </div>
-
-                  <div> 
-                  <input 
-                  type='checkbox'
-                  name='correcao'
-                  checked={correcao} 
-                  onChange={(e) => {setcorrecao(e.target.checked)}}
-                  />
-                  <label style={{margin: '3px'}}>Correção</label>
+              <div>
+                <input 
+                type='checkbox'
+                name='alteracao'
+                checked={alteracao} 
+                onChange={(e) => {setalteracao(e.target.checked)}}
+                />
+                <label style={{margin: '3px'}}>Alteração</label>
                 </div>
-            
 
+                <div> 
+                <input 
+                type='checkbox'
+                name='correcao'
+                checked={correcao} 
+                onChange={(e) => {setcorrecao(e.target.checked)}}
+                />
+                <label style={{margin: '3px'}}>Correção</label>
+              </div>
+            
               <div>
                 <br/>
                 <label>Digite as Alterações no sistema</label>
