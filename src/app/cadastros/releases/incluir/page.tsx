@@ -30,9 +30,9 @@ export default function IncluirRelease() {
   const [exibirInclusaoItem, setExibirInclusaoItem] = useState(false)
 
   const [id_item_release, setIdItemRelease]         = useState<string | null>(null)
-  const [id_submodulo, setIdSubmodulo]             = useState<string>('');
-  const [id_sistema, setIdSistema]                 = useState<string>('');
-  const [id_modulo, setidModulo]                   = useState<string>('');
+  const [id_submodulo, setIdSubmodulo]              = useState<string>('');
+  const [id_sistema, setIdSistema]                  = useState<string>('');
+  const [id_modulo, setidModulo]                    = useState<string>('');
   const [sistema, setSistema]                       = useState<SistemaProps[]>([]);
   const [modulo, setModulo]                         = useState<ModuloProps[]>([]);
   const [submodulo, setSubModulo]                   = useState<SubModuloProps[]>([]);
@@ -131,11 +131,16 @@ export default function IncluirRelease() {
   },[id_release])
 
   const btnIncluirItem = async () => {
+    if(!numero_release || !versao_gestores || !versao_sincdata || !versao_gestorpdv || !versao_balcao) {
+      toast('Dados do cabeçalho Devem ser preenchidos')
+      return
+    }
+
     if(!id_release){
       const token = await getCookieServer();
       
       try {
-        await api.post('/criarrelease', {
+        const response = await api.post('/criarrelease', {
           numero_release , 
           versao_gestores, 
           versao_sincdata, 
@@ -148,19 +153,25 @@ export default function IncluirRelease() {
             Authorization: `Bearer ${token}`
           }
         })
+        setIdRelease(response.data.id_release)
+
         toast('Cadastrado com Sucesso')
       } catch (error) {
         toast( 'Erro ao cadastrar Release')
         throw new Error('Erro ao cadastrar Release')
       }
     }
-
+    
     setExibirInclusaoItem(true)
     limparCampos();
   }
 
   const btnGravarItem = async () => {
 
+    if(!nomeItemRelease || !id_sistema || !id_modulo || !id_submodulo || !observacao){
+      toast('Complete as informações para gravar')
+      return
+    }
     if(!id_item_release){
     const token = await getCookieServer();
     try {
@@ -219,7 +230,21 @@ export default function IncluirRelease() {
   const btnAlterarItem = (id_item_release: string) => {
     setExibirInclusaoItem(true)
     detalharitem(String(id_item_release))
- 
+  }
+
+  const btnExcluirItem = async (id_item_release: string) => {
+    if (!confirm("Deseja excluir item da Release?")) return;
+    const token = await getCookieServer()
+    try {
+      await api.delete(`/deletaritemrelease/${id_item_release}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      handlebuscar();
+    } catch (error) {
+      toast('Erro ao deletar item')
+    }
   }
 
   const btnCancelarInclusaoItem = () => {
@@ -227,8 +252,59 @@ export default function IncluirRelease() {
     limparCampos();
   }
 
-  const btnGravar = () =>{
-    
+  const btnGravar = async () =>{
+    if(!numero_release || !versao_gestores || !versao_sincdata || !versao_gestorpdv || !versao_balcao) {
+      toast('Dados do cabeçalho Devem ser preenchidos')
+      return
+    }
+
+    if(!id_release){
+      const token = await getCookieServer();
+      
+      try {
+         await api.post('/criarrelease', {
+          numero_release , 
+          versao_gestores, 
+          versao_sincdata, 
+          versao_gestorpdv, 
+          versao_balcao,
+          id_usuario : informacao_usuario?.id_usuario,
+          finalizado : Boolean(finalizado)
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        toast('Cadastrado com Sucesso')
+
+      } catch (error) {
+        toast( 'Erro ao cadastrar Release')
+        throw new Error('Erro ao cadastrar Release')
+      }
+    }else {
+      const token = await getCookieServer();
+      try {
+        await api.put('/atualizarrelease', {
+          id_release,
+          numero_release , 
+          versao_gestores, 
+          versao_sincdata, 
+          versao_gestorpdv, 
+          versao_balcao,
+          id_usuario : informacao_usuario?.id_usuario,
+          finalizado : Boolean(finalizado)
+        }, {
+          headers:{
+             Authorization: `Bearer ${token}`
+          }
+        })
+        toast('Atualizado com sucesso')
+      } catch (error) {
+        toast('Erro Ao atualizar a Relese')
+        throw new Error('Erro Ao atualizar a Relese')    
+      }
+    }  
+    router.push('/cadastros/releases')
   }
 
   const btncancelar = ()=>{
@@ -285,7 +361,7 @@ export default function IncluirRelease() {
 
        <div className={estiloGlobal.barraFuncoes}>
           <div>
-            <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} >Gravar</button>
+            <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={btnGravar}>Gravar</button>
             <button className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`} onClick={btncancelar}>Cancelar</button>
           </div>
        </div>
@@ -414,8 +490,8 @@ export default function IncluirRelease() {
 
                   <button 
                       className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`}
-                      
-                      >{"Excluir"}
+                      onClick= {() => btnExcluirItem(String(item.id_item_release))} 
+                      >Excluir
                   </button>
                 </td>
                 </tr>

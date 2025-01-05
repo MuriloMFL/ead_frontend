@@ -11,63 +11,69 @@ import { buscaDados } from '@/servicos/buscar';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { SubModuloProps } from '@/lib/submodulo.type';
+import { QuestaoProps } from '@/lib/questao.type';
 
 export default function IncluirProvas() {
-  const [id_planejamento, setIdPlanejamento]       = useState<string | null>(null);
-  const [nome_planejamento, setNomePlanejamento]   = useState<string>('');
+  const [id_prova, setIdprova]                     = useState<string | null>(null);
+  const [nome_prova, setNomeProva]                 = useState<string>('');
   const [id_submodulo, setIdSubmodulo]             = useState<string>('');
   const [id_sistema, setIdSistema]                 = useState<string>('');
   const [id_modulo, setidModulo]                   = useState<string>('');
+  const [id_questao, setIdQuestao]                 = useState<string>('')
   const [sistema, setSistema]                      = useState<SistemaProps[]>([]);
   const [modulo, setModulo]                        = useState<ModuloProps[]>([]);
   const [submodulo, setSubModulo]                  = useState<SubModuloProps[]>([]);
+  const [questoes, setQuestoes]                    = useState<QuestaoProps[]>([])
   const router                                     = useRouter();
 
     useEffect (() => {
       const cookies = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('id_planejamento='))
+        .split(';')
+        .find(row => row.startsWith('id_prova='))
         ?.split('=')[1]
-        setIdPlanejamento(cookies || null);
+        setIdprova(cookies || null);
 
         if(cookies){
-          detalharplanejamento(cookies)
+          detalharprova(cookies)
         }
     }, [])
     
-    async function detalharplanejamento(id_planejamento: string){
+    async function detalharprova(id_prova: string){
       const token = await getCookieServer();
       try {
-        const { data } = await api.get(`/detalharplanejamento/${id_planejamento}`, {
+        const { data } = await api.get(`/detalharprova/${id_prova}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           }        
         });
   
         if (data) {
-          setIdPlanejamento(data.id_planejamento || "")
-          setNomePlanejamento(data.nome_planejamento || "");
+          setIdprova(data.id_prova || "")
+          setNomeProva(data.nome_prova || "");
           setIdSubmodulo(data.id_submodulo || "");
           setIdSistema(data.id_sistema || "")
           setidModulo(data.id_modulo || "")
         } else {
-          toast.warn("Nenhum Submodulo encontrada para o ID fornecido.");
+          toast.warn("Nenhum Prova encontrada para o ID fornecido.");
         }
       } catch (err) {
-        toast.error("Erro ao buscar os dados do Planejamento.");
+        toast.error("Erro ao buscar os dados dacprova.");
         console.error(err);
       }
     }
 
     async function btngravar(){
-        
-        if(!id_submodulo){
+        if(!nome_prova || !id_sistema || !id_modulo || !id_submodulo){
+          toast("Dados do cabeçalho devem ser informados")
+          return
+        }
+        if(!id_prova){
           const token = await getCookieServer();
           try {
-            await api.post(
-              "/criarplanejamento",
+             await api.post(
+              "/criarprova",
               { 
-                nome_planejamento,
+                nome_prova,
                 id_sistema,
                 id_modulo,
                 id_submodulo,},
@@ -78,7 +84,7 @@ export default function IncluirProvas() {
               }
             );
             toast.success("Gravado com sucesso.");
-            router.push("../../cadastros/planejamentos");
+            router.push("../../cadastros/provas");
           } catch {
             console.error
           }
@@ -86,9 +92,9 @@ export default function IncluirProvas() {
         try {
           const token = await getCookieServer();
           await api.put(
-            "/atualizarplanejamento",
-            { id_planejamento,
-              nome_planejamento,
+            "/atualizarprova",
+            { id_prova,
+              nome_prova,
               id_sistema,
               id_modulo,
               id_submodulo,},
@@ -100,14 +106,61 @@ export default function IncluirProvas() {
           );
     
           toast.success("Gravado com sucesso.");
-          router.push("../../cadastros/planejamentos");
+          router.push("../../cadastros/provas");
         } catch (err: any) {console.error
-          throw new Error('Erro ao atualizar Planejamento')
+          throw new Error('Erro ao atualizar Prova')
           
         }        
         }
       }
 
+      async function btnIncluirQuestao() {
+        if(!nome_prova || !id_sistema || !id_modulo || !id_submodulo){
+          toast("Dados do cabeçalho devem ser informados")
+          return
+        }
+
+        try {
+          if(!id_prova){
+            const token = await getCookieServer();
+            try {
+              const response = await api.post(
+                "/criarprova",
+                { 
+                  nome_prova,
+                  id_sistema,
+                  id_modulo,
+                  id_submodulo,},
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              setIdprova(response.data.id_prova)
+              toast.success("Gravado com sucesso.");
+
+            } catch {
+              console.error
+            }
+          }   
+        } catch (error) {
+          toast('Erro ao gravar Prova')
+        }
+      }
+
+    const selecionarquestao = async () => {
+      const filtros = {
+        id_prova : null,
+        id_aula  : null
+      };
+      const questoes = await buscaDados('/listarquestao', filtros);
+      setQuestoes(questoes)
+    }
+    useEffect(() => {
+      selecionarquestao();
+    }, []);
+    
     const selecionarSistema = async () => {
       const filtros = {
         status: true,
@@ -147,9 +200,9 @@ export default function IncluirProvas() {
     }, [id_modulo]);
 
     const btnCancelar = () => {
-      document.cookie = "id_planejamento=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-      setIdPlanejamento(null);
-      router.push('../../cadastros/planejamentos');
+      document.cookie = "id_prova=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+      setIdprova(null);
+      router.push('../../cadastros/provas');
     };   
   return (
     <>
@@ -227,16 +280,25 @@ export default function IncluirProvas() {
                   type="text"  
                   className={estiloLocal.inputPlanejamento} 
                   placeholder='Nome da prova'
-                  value={nome_planejamento}
-                  onChange={(e) => {setNomePlanejamento(e.target.value)}}
+                  value={nome_prova}
+                  onChange={(e) => {setNomeProva(e.target.value)}}
                 />
               </div>
           </div>
        </form>
        <div className={estiloGlobal.barraFuncoes}>
         <div>
-          <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`}>
-            Incluir
+          <select className={estiloLocal.inputPesquisaSelectForm}>
+            <option value='' disabled>Selecione a questão</option>
+            {
+              questoes.map ( (item) => (
+                <option value={item.id_questao} key={item.id_questao}>{item.questoes}</option>
+              ))
+            }
+            
+          </select>
+          <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={btnIncluirQuestao}>
+            Incluir Questão
           </button>          
         </div>
       </div>
@@ -262,7 +324,7 @@ export default function IncluirProvas() {
                   <td data-label="Versão SincData">item.id_submodulo</td>
                   <td>
                     <button 
-                        className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
+                        className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`}  
                         >Alterar
                     </button>
 
