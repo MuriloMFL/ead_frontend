@@ -6,21 +6,24 @@ import { buscaDados } from '@/servicos/buscar'
 import { ReleaseProps } from '@/lib/release.type'
 import { useRouter } from 'next/navigation'
 import { excluirDados } from '@/servicos/excluir'
+import { toast } from 'react-toastify'
 
 export default function CadastrarReleases(){
-    const [status, setStatus] = useState<string>('true')
-    const [id_release, setIdRelease] = useState<string | null>(null)
-    const [numero_release, setNumeroRelease] = useState<string>('')
-    const [release, setRelease] = useState<ReleaseProps[]>([])
-    const router = useRouter();
+  const [status, setStatus] = useState<string>('true')
+  const [id_release, setIdRelease] = useState<string | null>(null)
+  const [numero_release, setNumeroRelease] = useState<string>('')
+  const [finalizado, setFinalizado] = useState<string>('false')
+  const [release, setRelease] = useState<ReleaseProps[]>([])
+  const router = useRouter();
 
-    const handlebuscar = async () => {
-      const filtros = {
-      status : status ==='true' ? true : false,
-      numero_release: numero_release
-      }
-      const release = await buscaDados('/listarrelease', filtros)
-      setRelease(release);
+  const handlebuscar = async () => {
+    const filtros = {
+    status : status ==='true' ? true : false,
+    numero_release: numero_release,
+    finalizado: finalizado ==='true' ? finalizado : false
+    }
+    const release = await buscaDados('/listarrelease', filtros)
+    setRelease(release);
   }
   
   useEffect( ()=> {
@@ -44,16 +47,13 @@ export default function CadastrarReleases(){
       }
     }
     const handleAlterar = (id_release : number) =>{
-      document.cookie = `id_release=${id_release} ; path=/; max-age=86400;`
+      document.cookie = `id_release=${id_release}; path=/; max-age=86400;`;
       router.push('/cadastros/releases/incluir')
     }
-
-
 
     return (
         <>
         <Header />
-
         <main className={estiloGlobal.dados}>
             <div className={estiloGlobal.titulo}>
                 <h1>Cadastros de Release</h1>
@@ -70,6 +70,7 @@ export default function CadastrarReleases(){
           </div>
           <form  onSubmit={(e) => { e.preventDefault(); handlebuscar(); }}>
           <div>
+
             <select 
               className={estiloGlobal.inputPesquisaSelect} 
               value={status} 
@@ -78,6 +79,16 @@ export default function CadastrarReleases(){
               <option value="true">Ativo</option>
               <option value="false">Inativo</option>
             </select>
+
+            <select 
+              className={estiloGlobal.inputPesquisaSelect} 
+              value={finalizado} 
+              onChange={(e) => setFinalizado(e.target.value)}
+            >
+              <option value="true">Finalizado</option>
+              <option value="false">Editando</option>
+            </select>
+
             <input 
               type="text" 
               placeholder="Pesquisar Release" 
@@ -85,6 +96,7 @@ export default function CadastrarReleases(){
               value={numero_release}
               onChange={(e) => setNumeroRelease(e.target.value)}
             />
+
             <button type="submit" className={estiloGlobal.btn}>Buscar</button>
           </div>
         </form>

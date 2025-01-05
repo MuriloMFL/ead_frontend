@@ -85,7 +85,7 @@ export default function IncluirPLanejamento() {
           setImpedimentos(data.impedimentos || "")
           setObservacao(data.observacoes || "")
         } else {
-          toast.warn("Nenhum Submodulo encontrada para o ID fornecido.");
+          toast.warn("Nenhum dado encontrada para o ID fornecido.");
         }
       } catch (err) {
         toast.error("Erro ao buscar os dados do Planejamento.");
