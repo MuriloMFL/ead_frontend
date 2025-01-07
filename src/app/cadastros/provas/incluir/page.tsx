@@ -23,8 +23,7 @@ export default function IncluirProvas() {
   const [sistema, setSistema]                      = useState<SistemaProps[]>([]);
   const [modulo, setModulo]                        = useState<ModuloProps[]>([]);
   const [submodulo, setSubModulo]                  = useState<SubModuloProps[]>([]);
-  const [questoes, setQuestoes]                    = useState<QuestaoProps[]>([])
-  const [questoesP, setquestoesP]                  = useState<QuestaoProps[]>([])
+  const [questoesSemProva, setQuestoesSemProva]    = useState<QuestaoProps[]>([])
   const router                                     = useRouter();
 
     useEffect (() => {
@@ -145,51 +144,10 @@ export default function IncluirProvas() {
             console.error
           }
         }
-        
-        try {
-          toast(id_questao)
-          await api.put('/atualizarquestao', {
-            id_questao : id_questao,
-            id_prova   : id_prova
-          }, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
-
-        } catch (error) {
-          toast('Erro ao incluir questão na prova')
-        }
       } catch (error) {
         toast('Erro ao gravar Prova')
       }
       }
-
-    const questoesdaprova = async () => {
-      const filtros = {
-        id_prova : id_prova
-      }
-      const questoesdessaProva = await buscaDados('/listarquestao', filtros);
-      setquestoesP(questoesdessaProva)
-    }
-    useEffect ( ()=> {
-      if(id_prova){
-        questoesdaprova()
-      }
-    }, [id_prova])
-
-    const selecionarquestao = async () => {
-      const filtros = {
-        id_prova : null,
-        id_aula  : null
-      };
-      const questoes = await buscaDados('/listarquestaosemprova', filtros);
-      setQuestoes(questoes)
-      setIdQuestao(questoes.id_questao)
-    }
-    useEffect(() => {
-      selecionarquestao();
-    }, []);
 
     const selecionarSistema = async () => {
       const filtros = {
@@ -323,7 +281,7 @@ export default function IncluirProvas() {
           onChange={(e) => setIdQuestao(e.target.value)}>
             <option value='' disabled>Selecione a questão</option>
             {
-              questoes.map ( (item) => (
+              questoesSemProva.map ( (item) => (
                 <option 
                 value={item.id_questao} 
                 key={item.id_questao}
@@ -352,7 +310,7 @@ export default function IncluirProvas() {
             </thead>
             <tbody>
               {
-                questoesP.map( (item) => (
+                questoesSemProva.map( (item) => (
                   <tr className={estiloGlobal.griditens} key={item.id_questao}>
                   <td data-label="Nome">{item.id_questao}</td>
                   <td data-label="Nome">{item.questoes}</td>
