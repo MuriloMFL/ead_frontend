@@ -4,12 +4,16 @@ import estiloLocal   from "./page.module.scss"
 import { useState, useEffect } from "react";
 import { ReleaseProps } from "@/lib/release.type";
 import { buscaDados } from "@/servicos/buscar";
+import { toast } from "react-toastify";
 
 export function DashboardPrincipal(){
     const [status, setStatus] = useState<string>('true')
     const [id_release, setIdRelease] = useState<string | null>(null)
     const [nome_release, setNomeRelease] = useState<string>('')
     const [release, setRelease] = useState<ReleaseProps[]>([]) 
+    const [qtd_modulos, setQtdModulos] = useState<string>('')
+    const [qtd_submodulos, setQtdSubModulos] = useState<string>('')
+    const [qtd_aulas, setQtdAulas] = useState<string>('')
 
     const handlebuscar = async () => {
         const filtros = {
@@ -23,6 +27,41 @@ export function DashboardPrincipal(){
         handlebuscar()
     }, [])
 
+    const BuscarModulos = async () => {
+      const filtros = {
+        status : true,
+      }
+      const modulos = await buscaDados('/contarmodulos', filtros)
+      setQtdModulos(modulos)
+      
+    }
+    useEffect ( ()=> {
+      BuscarModulos()
+    }, [qtd_modulos])
+
+    const BuscarSubModulos = async () => {
+      const filtros = {
+        status : true,
+      }
+      const submodulos = await buscaDados('/contarsubmodulos', filtros)
+      setQtdSubModulos(submodulos)
+      
+    }
+    useEffect ( ()=> {
+      BuscarSubModulos()
+    }, [qtd_submodulos])
+
+    const BuscarAulas = async () => {
+      const filtros = {
+        status : true,
+      }
+      const aulas = await buscaDados('/contaraulas', filtros)
+      setQtdAulas(aulas)
+      
+    }
+    useEffect ( ()=> {
+      BuscarAulas()
+    }, [qtd_aulas])
     return(
         <main className={estiloGlobal.dados}>
             <div className={estiloGlobal.titulo}>
@@ -32,18 +71,18 @@ export function DashboardPrincipal(){
             <div className={estiloLocal.modulos}>
                 <div className={estiloLocal.amostra}>
                     <div className={estiloLocal.tituloAmostras}><h3>Modulos</h3></div>
-                    <h1 className={estiloLocal.dadosAmostra}>50%</h1>
-                    <p className={estiloLocal.dadosrodape}>15 de 30 modulos concluidos</p>
+                    <h1 className={estiloLocal.dadosAmostra}>{qtd_modulos}</h1>
+                    <p className={estiloLocal.dadosrodape}>Modulos Ativos</p>
                 </div>
                 <div className={estiloLocal.amostra}>
                     <div className={estiloLocal.tituloAmostras}><h3>Sub-Modulos</h3></div>
-                    <h1 className={estiloLocal.dadosAmostra}>60%</h1>
-                    <p className={estiloLocal.dadosrodape}> 89 Sub-modulos concluidos</p>
+                    <h1 className={estiloLocal.dadosAmostra}>{qtd_submodulos}</h1>
+                    <p className={estiloLocal.dadosrodape}>Sub-modulos Ativos</p>
                 </div>
                 <div className={estiloLocal.amostra}>
                     <div className={estiloLocal.tituloAmostras}><h3>Aulas</h3></div>
-                    <h1 className={estiloLocal.dadosAmostra}>87%</h1>
-                    <p className={estiloLocal.dadosrodape}>110 aulas concluidos</p>
+                    <h1 className={estiloLocal.dadosAmostra}>{qtd_aulas}</h1>
+                    <p className={estiloLocal.dadosrodape}>Aulas Ativas</p>
                 </div>
                 <div className={estiloLocal.amostra}>
                     <div className={estiloLocal.tituloAmostras}><h3>Questões</h3></div>

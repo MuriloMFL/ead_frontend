@@ -97,7 +97,9 @@ export default function CadastrarQuestoes(){
                 questao.map( (item)=> (
                   <tr className={estiloGlobal.griditens} key={item.id_questao}>
                   <td data-label="ID">{item.id_questao}</td>
-                  <td data-label="Questão">{item.questoes}</td>
+                  <td data-label="Questão">
+                    {item.questoes.length > 100 ? `${item.questoes.slice(0, 100)}...` : item.questoes}
+                  </td>
                   <td data-label="Sistema">{item.nome_sistema}</td>
                   <td data-label="Modulo">{item.nome_modulo}</td>
                   <td data-label="SubModulo">{item.nome_submodulo}</td>

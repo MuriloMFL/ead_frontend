@@ -340,6 +340,7 @@ export default function IncluirProvas() {
                   onChange={(e) => {setNomeProva(e.target.value)}}
                 />
               </div>
+              
           </div>
        </form>
 
@@ -348,6 +349,7 @@ export default function IncluirProvas() {
           <select className={estiloLocal.inputPesquisaSelectForm}
           value={String(id_questaoSelecionada)}
           onChange={(e) => setIdQuestaoSelecionada(e.target.value)}
+          style={{maxWidth: '330px'}}
           >
             <option value='' disabled>Selecione a questão</option>
             {
@@ -355,10 +357,11 @@ export default function IncluirProvas() {
                 <option 
                 value={item.id_questao} 
                 key={item.id_questao}
-                >{item.questoes}</option>
+                >
+                  {item.questoes.length > 100 ? `${item.questoes.slice(0, 100)}...` : item.questoes}
+                </option>
               ))
             }
-            
           </select>
           <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={btnIncluirQuestao}>
             Incluir Questão
@@ -383,7 +386,9 @@ export default function IncluirProvas() {
                 questoesDessaProva.map( (item) => (
                   <tr className={estiloGlobal.griditens} key={item.id_questao} >
                   <td data-label="Nome">{item.id_questao}</td>
-                  <td data-label="Nome">{item.questoes}</td>
+                  <td data-label="Questão">
+                    {item.questoes.length > 100 ? `${item.questoes.slice(0, 100)}...` : item.questoes}
+                  </td>
                   <td data-label="Versão Gestores">{item.nome_sistema}</td>
                   <td data-label="Versão GestorPDV">{item.nome_modulo}</td>
                   <td data-label="Versão SincData">{item.nome_submodulo}</td>
