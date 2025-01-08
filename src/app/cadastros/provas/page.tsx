@@ -41,7 +41,6 @@ export default function CadastrarProvas(){
     }
     const handleAlterar = (id_prova: number) =>{
       document.cookie =`id_prova=${id_prova}; max-age=8600;`
-      setIdProva(null)
       router.push('/cadastros/provas/incluir')
     }
 
