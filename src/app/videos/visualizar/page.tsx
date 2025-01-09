@@ -127,7 +127,7 @@ export default function IncluirVideo() {
        {link ? (
         <iframe
           width="100%"
-          height="600"
+          height="650"
           src={transformarLink(link)}
           title="YouTube video player"
           frameBorder="0"

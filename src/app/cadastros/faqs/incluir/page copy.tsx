@@ -10,7 +10,6 @@ import { buscaDados } from '@/servicos/buscar';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { SubModuloProps } from '@/lib/submodulo.type';
-import QuillEditor from '@/servicos/QuillEditor'; 
 
 export default function IncluirFaq() {
   const [id_faq, setIdFaq]                         = useState<string | null>(null);
@@ -244,10 +243,7 @@ export default function IncluirFaq() {
 
               <div>
                 <h4>Observações</h4>
-                <div>
-                  <h1>Editor de Texto</h1>
-                  <QuillEditor />
-                </div>
+
               </div>
           </div>
        </form>

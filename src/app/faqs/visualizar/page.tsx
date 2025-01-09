@@ -53,6 +53,7 @@ export default function VisualizarFaq() {
         if (data) {
           setNomeFaq(data.nome_faq || '');
           setLink(data.link || '');
+          
         } else {
           toast.warn('Nenhum dado encontrado para o ID fornecido.');
         }
@@ -62,7 +63,7 @@ export default function VisualizarFaq() {
       }
     }
   
-    useEffect(() => {
+    useEffect( () => {
       if (link) {
         fetchFaqContent(link);
       }
@@ -110,8 +111,9 @@ export default function VisualizarFaq() {
           toast.warn('Conteúdo da FAQ não encontrado.');
         }
       } catch (error) {
-        toast.error('Erro ao carregar o conteúdo da FAQ.');
         console.error(error);
+        toast.error('Erro ao carregar o conteúdo da FAQ.');
+        
       }
     }
 
@@ -135,17 +137,9 @@ export default function VisualizarFaq() {
             <button className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`} onClick={btnCancelar}>Voltar</button>
           </div>
        </div>
-
-       <div className={estiloGlobal.conteudo}>
-          {faqContent ? (
-            <div
-              dangerouslySetInnerHTML={{ __html: faqContent }}
-              className={estiloGlobal.faqContent}
-            />
-          ) : (
+       
             <p>Carregando conteúdo...</p>
-          )}
-        </div>
+
       </main>
     </>
   );
