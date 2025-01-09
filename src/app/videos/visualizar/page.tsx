@@ -10,8 +10,8 @@ import useUserInfo from '@/servicos/useUserInfo';
 
 export default function IncluirVideo() {
   const [id_video, setIdVideo]                     = useState<string | null>(null);
-  const [id_usuario, setIdUsuario]                 = useState<string | null>(null);
-  const [id_franquia, setIdFranquia]               = useState<string | null>(null);
+  const [id_usuario, setIdUsuario]                 = useState<string>('');
+  const [id_franquia, setIdFranquia]               = useState<string>('');
   const [id_sistema, setIdSistema]                 = useState<string | null>(null);
   const [id_modulo, setIdModulo]                   = useState<string | null>(null);
   const [id_submodulo, setIdSubModulo]             = useState<string | null>(null);
@@ -27,12 +27,19 @@ export default function IncluirVideo() {
         .find(row => row.startsWith('id_video_visualizar='))
         ?.split('=')[1]
         setIdVideo(cookies || null);
-      
         if(cookies){
           detalharvideo(cookies)
         }
     }, [])
     
+    useEffect(() => {
+      // Verifica quando informacao_usuario está disponível e atualiza os estados
+      if (informacao_usuario?.id_usuario && informacao_usuario?.id_franquia) {
+        setIdUsuario(String(informacao_usuario?.id_usuario));
+        setIdFranquia(String(informacao_usuario?.id_franquia));
+      }
+    }, [informacao_usuario]);
+
     async function detalharvideo(id_video: string){
       const token = await getCookieServer();
       try {
@@ -61,16 +68,15 @@ export default function IncluirVideo() {
 
     async function btngravar(){
       try {
-        setIdUsuario(informacao_usuario?.id_usuario || null)
-        setIdFranquia(informacao_usuario?.id_franquia || null)
         const token = await getCookieServer();
         await api.post(
           "/criarmvvideo",
-          { id_sistema, 
+          { 
+            id_sistema, 
             id_submodulo, 
             id_modulo, 
-            id_usuario, 
-            id_franquia, 
+            id_usuario : id_usuario, 
+            id_franquia : id_franquia, 
             id_video
           },
           {
@@ -82,6 +88,7 @@ export default function IncluirVideo() {
         toast.success("Gravado com sucesso.");
         router.push("/videos");
       } catch (err: any) {
+        console.error(err)
         throw new Error('Erro ao atualizar Video')
       }        
     }
@@ -117,16 +124,20 @@ export default function IncluirVideo() {
        </div>
 
        <form className={estiloGlobal.formCadastro}>
-       <iframe
+       {link ? (
+        <iframe
           width="100%"
           height="600"
-          src={link ? transformarLink(link) : ""}
+          src={transformarLink(link)}
           title="YouTube video player"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
         ></iframe>
+      ) : (
+        <p>Carregando vídeo...</p>
+      )}
 
         <h4>Observações</h4>
         <textarea 

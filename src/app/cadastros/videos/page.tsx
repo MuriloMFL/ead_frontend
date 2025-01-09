@@ -93,8 +93,8 @@ export default function CadastrarVideos(){
             </thead>
 
             {video.map ( (item) =>(
-              <tbody>
-                <tr className={estiloGlobal.griditens} key={item.id_video}>
+              <tbody key={item.id_video}>
+                <tr className={estiloGlobal.griditens}>
                   <td data-label="ID">{item.id_video}</td>
                   <td data-label="Video">{item.nome_video}</td>
                   <td data-label="Sistema">{item.nome_sistema}</td>

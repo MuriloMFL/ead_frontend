@@ -1,10 +1,9 @@
 "use client"
-import estiloGlobal   from "../../../page.module.scss";
-import estiloLocal   from "./page.module.scss"
+import estiloGlobal from "../../../page.module.scss";
+import estiloLocal from "./page.module.scss"
 import { useState, useEffect } from "react";
 import { ReleaseProps } from "@/lib/release.type";
 import { buscaDados } from "@/servicos/buscar";
-import { toast } from "react-toastify";
 
 export function DashboardPrincipal(){
     const [status, setStatus] = useState<string>('true')
