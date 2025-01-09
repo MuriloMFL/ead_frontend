@@ -1,23 +1,24 @@
 "use client"
 import estiloGlobal from '../../page.module.scss'
-import estiloLocal  from './page.module.scss'
 import { Header } from '@/app/dashboard/componentes/header';
 import { api } from '@/servicos/api';
 import { getCookieServer } from '@/lib/cookieServidor';
 import { useState, useEffect} from 'react';
-import { SistemaProps } from '@/lib/sistema.type';
-import { ModuloProps } from '@/lib/modulo.type';
-import { buscaDados } from '@/servicos/buscar';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { SubModuloProps } from '@/lib/submodulo.type';
+import useUserInfo from '@/servicos/useUserInfo';
 
 export default function IncluirVideo() {
   const [id_video, setIdVideo]                     = useState<string | null>(null);
+  const [id_usuario, setIdUsuario]                 = useState<string | null>(null);
+  const [id_franquia, setIdFranquia]               = useState<string | null>(null);
+  const [id_sistema, setIdSistema]                 = useState<string | null>(null);
+  const [id_modulo, setIdModulo]                   = useState<string | null>(null);
+  const [id_submodulo, setIdSubModulo]             = useState<string | null>(null);
   const [nome_video, setNomeVideo]                 = useState<string>('');
   const [link, setLink]                            = useState<string>('');
   const [observacao, setObservacao]                = useState<string>('');
-  const [order, setOrder]                          = useState<string>('0');
+  const informacao_usuario = useUserInfo();
   const router = useRouter();
 
     useEffect (() => {
@@ -26,7 +27,7 @@ export default function IncluirVideo() {
         .find(row => row.startsWith('id_video_visualizar='))
         ?.split('=')[1]
         setIdVideo(cookies || null);
-        
+      
         if(cookies){
           detalharvideo(cookies)
         }
@@ -42,10 +43,13 @@ export default function IncluirVideo() {
         });
   
         if (data) {
-          setIdVideo(data.id_video || "")
-          setNomeVideo(data.nome_video || "")
-          setLink(data.link || "")
-          setObservacao(data.observacao || "")
+          setIdVideo     (data.id_video || "")
+          setIdSistema   (data.id_sistema || "")
+          setIdModulo    (data.id_modulo || "")
+          setIdSubModulo (data.id_submodulo || "")
+          setNomeVideo   (data.nome_video || "")
+          setLink        (data.link || "")
+          setObservacao  (data.observacao || "")
         } else {
           toast.warn("Nenhum Video encontrada para o ID fornecido.");
         }
@@ -56,44 +60,31 @@ export default function IncluirVideo() {
     }
 
     async function btngravar(){
-        
-        if(!id_video){
-          const token = await getCookieServer();
-          try {
-            await api.post(
-              "/criarvideo",
-              { nome_video, link, observacao, order },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            toast.success("Gravado com sucesso.");
-            router.push("../../cadastros/videos");
-          } catch {
-            new Error('Erro');
+      try {
+        setIdUsuario(informacao_usuario?.id_usuario || null)
+        setIdFranquia(informacao_usuario?.id_franquia || null)
+        const token = await getCookieServer();
+        await api.post(
+          "/criarmvvideo",
+          { id_sistema, 
+            id_submodulo, 
+            id_modulo, 
+            id_usuario, 
+            id_franquia, 
+            id_video
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        }else {
-        try {
-          const token = await getCookieServer();
-          await api.put(
-            "/atualizarvideo",
-            { nome_video, link, observacao, order},
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-    
-          toast.success("Gravado com sucesso.");
-          router.push("../../cadastros/videos");
-        } catch (err: any) {
-          throw new Error('Erro ao atualizar Video')
-        }        
-        }
-      }
+        );
+        toast.success("Gravado com sucesso.");
+        router.push("/videos");
+      } catch (err: any) {
+        throw new Error('Erro ao atualizar Video')
+      }        
+    }
 
     const btnCancelar = () => {
       document.cookie = "id_video_visualizar=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
@@ -104,9 +95,12 @@ export default function IncluirVideo() {
     function transformarLink(link: string): string {
       if (link.includes("youtube.com/watch?v=")) {
         return link.replace("watch?v=", "embed/");
+      } else if (link.includes("youtu.be/")) {
+        return link.replace("youtu.be/", "youtube.com/embed/");
       }
-      return link; // Se o link já estiver no formato correto, retorna inalterado
+      return link; 
     }
+
   return (
     <>
       <Header />
@@ -117,8 +111,8 @@ export default function IncluirVideo() {
 
        <div className={estiloGlobal.barraFuncoes}>
           <div>
-            <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={btngravar}>Gravar</button>
-            <button className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`} onClick={btnCancelar}>Cancelar</button>
+            <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={btngravar}>Marcar Como Visto</button>
+            <button className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`} onClick={btnCancelar}>Voltar</button>
           </div>
        </div>
 
@@ -133,18 +127,17 @@ export default function IncluirVideo() {
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
         ></iframe>
+
         <h4>Observações</h4>
         <textarea 
-            required
             className={estiloGlobal.inputPesquisa} 
             placeholder='Observações do Video'
             value={observacao}
+            readOnly
             onChange={(e) => {setObservacao(e.target.value)}}
-            style={{ resize: 'vertical', width: '100%', height: '100px'}}
+            style={{ resize: 'vertical', width: '100%', height: '150px'}}
         />
-
        </form>
-
       </main>
     </>
   );

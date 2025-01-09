@@ -28,7 +28,6 @@ export default function Videos(){
 
     const handleVisualizar = async (id_video: number) =>{
       document.cookie = `id_video_visualizar=${id_video}; path=/; max-age=86000`
-        toast(id_video)
         router.push('/videos/visualizar')
         
     }  
