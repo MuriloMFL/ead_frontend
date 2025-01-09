@@ -55,8 +55,11 @@ export function DashboardPrincipal(){
         status : true,
       }
       const aulas = await buscaDados('/contaraulas', filtros)
-      setQtdAulas(aulas)
-      
+      if(aulas){
+        setQtdAulas(aulas)
+      }else {
+        setQtdAulas('0')
+      }
     }
     useEffect ( ()=> {
       BuscarAulas()
