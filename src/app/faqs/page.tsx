@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { buscaDados } from '@/servicos/buscar'
 import { useRouter } from 'next/navigation'
 import { faqProps } from '@/lib/faq.type'
+import { toast } from 'react-toastify'
 
 export default function Faqs(){
     const [id_faq, setIdFaq] = useState<string | null>(null)
@@ -25,8 +26,9 @@ export default function Faqs(){
       handlebuscar()
     }, [])
 
-    const handleVisualizar = () =>{
-
+    const handleVisualizar = (id_faq : number) =>{
+      document.cookie = `id_faq_visualizar=${id_faq}; path=/; max-age=86000;`
+      router.push('/faqs/visualizar')
     }
     return (
         <>
@@ -84,7 +86,7 @@ export default function Faqs(){
                   <td>
                     <button 
                         className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
-                        onClick={() => handleVisualizar}
+                        onClick={() => handleVisualizar(Number(item.id_faq))}
                         >Visualizar
                     </button>
                   </td>
