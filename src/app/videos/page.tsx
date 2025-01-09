@@ -1,11 +1,11 @@
 "use client"
 import estiloGlobal from '../page.module.scss'
 import { Header } from '../dashboard/componentes/header'
-import { Footer } from '../dashboard/componentes/footer'
 import { useEffect, useState } from 'react'
 import { videoProps } from '@/lib/video.lype'
 import { useRouter } from 'next/navigation'
 import { buscaDados } from '@/servicos/buscar'
+import { toast } from 'react-toastify'
 
 export default function Videos(){
     const [id_video, setIdVideo] = useState<string | null>(null)
@@ -25,9 +25,14 @@ export default function Videos(){
     useEffect ( ()=>{
       handlebuscar()
     },[])
-    const handleVisualizar = () =>{
 
-    }   
+    const handleVisualizar = async (id_video: number) =>{
+      document.cookie = `id_video_visualizar=${id_video}; path=/; max-age=86000`
+        toast(id_video)
+        router.push('/videos/visualizar')
+        
+    }  
+
     return (
         <>
         <Header />
@@ -73,8 +78,8 @@ export default function Videos(){
             </thead>
 
             {video.map ((item) =>(
-              <tbody key={item.id_video}>
-                <tr className={estiloGlobal.griditens} >
+              <tbody >
+                <tr className={estiloGlobal.griditens} key={item.id_video}>
                   <td data-label="ID">{item.id_video}</td>
                   <td data-label="Video">{item.nome_video}</td>
                   <td data-label="Sistema">{item.nome_sistema}</td>
@@ -83,7 +88,7 @@ export default function Videos(){
                   <td>
                     <button 
                         className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
-                        onClick={() => handleVisualizar}
+                        onClick={(e) => handleVisualizar(Number(item.id_video))}
                         >Visualizar
                     </button>
                   </td>
@@ -93,7 +98,6 @@ export default function Videos(){
           </table>
         </section>
         </main>
-        <Footer />
         </>
   
     )
