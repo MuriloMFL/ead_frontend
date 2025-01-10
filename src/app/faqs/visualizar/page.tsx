@@ -3,10 +3,12 @@ import estiloGlobal from '../../page.module.scss'
 import { Header } from '@/app/dashboard/componentes/header';
 import { api } from '@/servicos/api';
 import { getCookieServer } from '@/lib/cookieServidor';
-import { useState, useEffect} from 'react';
+import React ,{ useState, useEffect} from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import useUserInfo from '@/servicos/useUserInfo';
+import RichTextEditor from '@/componentes/Editor';
+
 
 export default function VisualizarFaq() {
   const [id_faq, setIdFaq]                         = useState<string | null>(null);
@@ -138,6 +140,9 @@ export default function VisualizarFaq() {
           </div>
        </div>
        
+       <div>
+        Onservações
+       </div>
             <p>Carregando conteúdo...</p>
 
       </main>

@@ -10,7 +10,7 @@ import { buscaDados } from '@/servicos/buscar';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { SubModuloProps } from '@/lib/submodulo.type';
-import { Editor } from '@tinymce/tinymce-react';
+
 
 export default function IncluirFaq() {
   const [id_faq, setIdFaq]                         = useState<string | null>(null);
@@ -230,7 +230,7 @@ export default function IncluirFaq() {
                     style={{width: '100%'}}
                 />
               </div>
-
+              
               <div>
                 <h4>Observações</h4>
                 <textarea  
@@ -243,24 +243,14 @@ export default function IncluirFaq() {
                 />
               </div>
 
-              <div>
               <h4>Editor de Texto</h4>
-              <Editor
-                apiKey='jd98ov351unavy3w4cgb8e4tmj0v3xd9poyi5b4k8bcgay8t'
-                init={{
-                  plugins: [
-                    // Core editing features (free)
-                    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount'
-                  ],
-                  toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-                  tinycomments_mode: undefined,
-                  mergetags_list: [],
-                  ai_request: undefined
-                }}
-                
-              />
-            </div>
-
+               <textarea 
+                  className={estiloGlobal.inputPesquisa} 
+                  placeholder='Link da FAQ'
+                  value={link}
+                  onChange={(e) => {setLink(e.target.value)}}
+                  style={{width: '100%'}}
+               />
           </div>
        </form>
 
