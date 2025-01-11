@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { SubModuloProps } from '@/lib/submodulo.type';
 import { Editor } from '@tinymce/tinymce-react';
 
+
 export default function IncluirFaq() {
   const [id_faq, setIdFaq]                         = useState<string | null>(null);
   const [nome_faq, setNomeFaq]                     = useState<string>('');
@@ -25,7 +26,6 @@ export default function IncluirFaq() {
   const [modulo, setModulo]                        = useState<ModuloProps[]>([]);
   const [submodulo, setSubModulo]                  = useState<SubModuloProps[]>([]);
   const router = useRouter();
-
 
     useEffect (() => {
       const cookies = document.cookie
@@ -72,7 +72,7 @@ export default function IncluirFaq() {
           try {
             await api.post(
               "/criarfaq",
-              { id_sistema, id_modulo, id_submodulo, nome_faq, link, observacao, order },
+              { id_sistema, id_modulo, id_submodulo, nome_faq, link, observacao, order  },
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -147,7 +147,8 @@ export default function IncluirFaq() {
       document.cookie = "id_faq=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
       setIdFaq(null);
       router.push('../../cadastros/faqs');
-    };   
+    };  
+
   return (
     <>
       <Header />
@@ -242,28 +243,28 @@ export default function IncluirFaq() {
                     style={{width: '100%', height: '100px'}}
                 />
               </div>
-
+              
               <div>
               <h4>Editor de Texto</h4>
               <Editor
-                apiKey='jd98ov351unavy3w4cgb8e4tmj0v3xd9poyi5b4k8bcgay8t'
+                apiKey="jd98ov351unavy3w4cgb8e4tmj0v3xd9poyi5b4k8bcgay8t" // Adicione sua chave API do TinyMCE se necessário
                 init={{
-                  plugins: [
-                    // Core editing features (free)
-                    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount'
-                  ],
-                  toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-                  tinycomments_mode: undefined,
-                  mergetags_list: [],
-                  ai_request: undefined
+                  height: 1000,
+                  menubar: false,
+                  plugins: ['advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor'],
+                  toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image',
+                  branding: false,
                 }}
-                
+                value={link}
+                onEditorChange={(newContent) => {
+                  setLink(newContent);
+                  console.log(newContent);  // Verifique se o conteúdo está sendo atualizado corretamente
+                }}
               />
-            </div>
 
+            </div>
           </div>
        </form>
-
       </main>
     </>
   );

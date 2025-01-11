@@ -227,8 +227,8 @@ export default function IncluirPLanejamento() {
        </div>
 
        <form className={`${estiloGlobal.formCadastro} ${estiloGlobal.gridCadastros}`}>
-          <div>
-              <div>
+          <div style={{width: '100%'}}>
+              <div >
                 <div className={estiloGlobal.cabecalhoFormCadastro}>
                 <h4>Escolha os dados do planejamento</h4>
                 </div>
