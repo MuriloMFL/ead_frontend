@@ -8,4 +8,8 @@ export interface QuestaoProps {
     nome_modulo    : string;
     id_submodulo   : number;
     nome_submodulo : string;
+    alternativa_A  : string;
+    alternativa_B  : string;
+    alternativa_C  : string;
+    alternativa_D  : string;
 }

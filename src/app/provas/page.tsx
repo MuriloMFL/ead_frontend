@@ -26,8 +26,9 @@ export default function Provas(){
       handlebuscar();
     },[]);
 
-    const handleVisualizar = () =>{
-
+    const handleVisualizar = (id_prova : number) =>{
+      document.cookie = `id_prova_visualizar=${id_prova}; path=/; max-age=86000;`
+      router.push('/provas/visualizar')
     }
     return (
         <>
@@ -85,7 +86,7 @@ export default function Provas(){
                   <td>
                     <button 
                         className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
-                        onClick={() => handleVisualizar}
+                        onClick={() => handleVisualizar(Number(item.id_prova))}
                         >Visualizar
                     </button>
                   </td>
