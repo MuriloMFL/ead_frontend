@@ -218,6 +218,25 @@
     }
 }
 
+.conteudoHtml {
+  width: 100%;
+  max-width: 100%; // Garante que o conteúdo não ultrapasse a largura do contêiner
+  overflow-x: auto; // Adiciona barra de rolagem horizontal se necessário
+  word-wrap: break-word; // Faz o texto quebrar a linha em palavras longas
+  img {
+    max-width: 100%; // Torna imagens dentro do HTML responsivas
+    height: auto;    // Mantém a proporção da imagem
+  }
+  table {
+    width: 100%; // Faz tabelas ocuparem toda a largura disponível
+    overflow-x: auto; // Evita que tabelas quebrem o layout
+  }
+  iframe {
+    max-width: 100%; // Garante que vídeos e iframes sejam responsivos
+    height: auto;
+  }
+}
+
 .gridCadastros{
   display: flex;
   flex-wrap: wrap;

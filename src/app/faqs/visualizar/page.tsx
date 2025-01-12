@@ -17,7 +17,6 @@ export default function VisualizarFaq() {
   const [id_sistema, setIdSistema]                 = useState<string | null>(null);
   const [id_modulo, setIdModulo]                   = useState<string | null>(null);
   const [id_submodulo, setIdSubModulo]             = useState<string | null>(null);
-  const [faqContent, setFaqContent]                = useState<string | null>(null);
   const [nome_faq, setNomeFaq]                     = useState<string>('');
   const [link, setLink]                            = useState<string>('');
   const [observacao, setObservacao]                = useState<string>('');
@@ -36,7 +35,6 @@ export default function VisualizarFaq() {
     }, [])
     
     useEffect(() => {
-      
       if (informacao_usuario?.id_usuario && informacao_usuario?.id_franquia) {
         setIdUsuario(String(informacao_usuario?.id_usuario));
         setIdFranquia(String(informacao_usuario?.id_franquia));
@@ -55,6 +53,9 @@ export default function VisualizarFaq() {
         if (data) {
           setNomeFaq(data.nome_faq || '');
           setLink(data.link || '');
+          setIdSistema(data.id_sistema || '');
+          setIdModulo(data.id_modulo || '');
+          setIdSubModulo(data.id_submodulo || '');
           
         } else {
           toast.warn('Nenhum dado encontrado para o ID fornecido.');
@@ -64,12 +65,6 @@ export default function VisualizarFaq() {
         console.error(err);
       }
     }
-  
-    useEffect( () => {
-      if (link) {
-        fetchFaqContent(link);
-      }
-    }, [link]);
 
     async function btngravar(){
       try {
@@ -77,12 +72,12 @@ export default function VisualizarFaq() {
         await api.post(
           "/criarmvfaq",
           { 
-            id_sistema, 
-            id_submodulo, 
-            id_modulo, 
-            id_usuario  : id_usuario, 
-            id_franquia : id_franquia, 
-            id_faq
+            id_sistema   : Number(id_sistema), 
+            id_submodulo : Number(id_submodulo), 
+            id_modulo    : Number(id_modulo), 
+            id_usuario   : Number(id_usuario), 
+            id_franquia  : Number(id_franquia), 
+            id_faq       : Number(id_faq)
           },
           {
             headers: {
@@ -98,27 +93,6 @@ export default function VisualizarFaq() {
       }        
     }
 
-    async function fetchFaqContent(faqUrl: string) {
-      try {
-        const response = await fetch(faqUrl);
-        const htmlText = await response.text();
-  
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlText, 'text/html');
-        const faqBody = doc.querySelector('.pmf-faq-body');
-  
-        if (faqBody) {
-          setFaqContent(faqBody.innerHTML);
-        } else {
-          toast.warn('Conteúdo da FAQ não encontrado.');
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error('Erro ao carregar o conteúdo da FAQ.');
-        
-      }
-    }
-
     const btnCancelar = () => {
       document.cookie = "id_faq_visualizar=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
       setIdFaq(null);
@@ -129,7 +103,7 @@ export default function VisualizarFaq() {
     <>
       <Header />
       <main className={estiloGlobal.dados}>
-       <div className={estiloGlobal.titulo}>
+       <div className={estiloGlobal.titulo} style={{height: 100}}>
           <h1>{nome_faq}</h1>
        </div>
 
@@ -140,10 +114,10 @@ export default function VisualizarFaq() {
           </div>
        </div>
        
-       <div>
-        Onservações
+       <div className={estiloGlobal.dados}>
+       <div className={`${estiloGlobal.conteudoHtml}`} dangerouslySetInnerHTML={{ __html: link || '<p>Nenhum conteúdo disponível.</p>' }} />
        </div>
-            <p>Carregando conteúdo...</p>
+
 
       </main>
     </>
