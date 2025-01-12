@@ -20,13 +20,15 @@ export default function Provas(){
       }
       const release = await buscaDados('/listarrelease', filtros)
       setRelease(release);
-  }
+    }
   
-  useEffect( ()=> {
-      handlebuscar()
-  }, [])
-    const handleVisualizar = () =>{
+    useEffect( ()=> {
+        handlebuscar()
+    }, [])
 
+    const handleVisualizar = (id_release : string) =>{
+      document.cookie = `id_release_visualizar=${id_release}; path=/; max-age=86000`
+      router.push('/releases/visualizar')
     }
     return (
         <>
@@ -75,7 +77,7 @@ export default function Provas(){
             </thead>
             <tbody>
               {
-                release.map( (item) => (
+                release.map((item) => (
                   <tr className={estiloGlobal.griditens} key={item.id_release}>
                   <td data-label="Numero">{item.numero_release}</td>
                   <td data-label="Data">{item.data_inclusao}</td>
@@ -87,7 +89,7 @@ export default function Provas(){
                   <td>
                     <button 
                         className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
-                        onClick={() => handleVisualizar}
+                        onClick={() => handleVisualizar(String(item.id_release))}
                         >Visualizar
                     </button>
                   </td>

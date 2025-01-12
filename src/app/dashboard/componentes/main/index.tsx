@@ -4,6 +4,8 @@ import estiloLocal from "./page.module.scss"
 import { useState, useEffect } from "react";
 import { ReleaseProps } from "@/lib/release.type";
 import { buscaDados } from "@/servicos/buscar";
+import useUserInfo from "@/servicos/useUserInfo";
+import { useRouter } from "next/navigation";
 
 export function DashboardPrincipal(){
     const [status, setStatus] = useState<string>('true')
@@ -13,6 +15,10 @@ export function DashboardPrincipal(){
     const [qtd_modulos, setQtdModulos] = useState<string>('')
     const [qtd_submodulos, setQtdSubModulos] = useState<string>('')
     const [qtd_aulas, setQtdAulas] = useState<string>('')
+    const [nota_prova, setNotaProva] = useState<string>('')
+    const [id_usuario, setIdUsuario] = useState<string | null>(null)
+    const router = useRouter()
+    const informacao_usuario = useUserInfo()
 
     const handlebuscar = async () => {
         const filtros = {
@@ -26,13 +32,23 @@ export function DashboardPrincipal(){
         handlebuscar()
     }, [])
 
+    const BuscarProvas = async () => {
+      const filtros = {
+        id_usuario: informacao_usuario?.id_usuario
+      }
+      const provas = await buscaDados('/contarprovas', filtros)
+      setNotaProva(provas)
+    }
+    useEffect ( ()=> {
+      BuscarProvas()
+    }, [nota_prova])
+
     const BuscarModulos = async () => {
       const filtros = {
         status : true,
       }
       const modulos = await buscaDados('/contarmodulos', filtros)
       setQtdModulos(modulos)
-      
     }
     useEffect ( ()=> {
       BuscarModulos()
@@ -64,6 +80,11 @@ export function DashboardPrincipal(){
     useEffect ( ()=> {
       BuscarAulas()
     }, [qtd_aulas])
+
+    const handleVisualizar = (id_release : string) =>{
+      document.cookie = `id_release_visualizar=${id_release}; path=/; max-age=86000`
+      router.push('/releases/visualizar')
+    }
     return(
         <main className={estiloGlobal.dados}>
             <div className={estiloGlobal.titulo}>
@@ -94,8 +115,8 @@ export function DashboardPrincipal(){
 
                 <div className={estiloLocal.amostra}>
                     <div className={estiloLocal.tituloAmostras}><h3>Provas</h3></div>
-                    <h1 className={estiloLocal.dadosAmostra}>87%</h1>
-                    <p className={estiloLocal.dadosrodape}>5 Provas feitas</p>
+                    <h1 className={estiloLocal.dadosAmostra}>{nota_prova}%</h1>
+                    <p className={estiloLocal.dadosrodape}>De acertos</p>
                 </div>
 
                 <div className={estiloGlobal.titulo} >
@@ -130,6 +151,7 @@ export function DashboardPrincipal(){
                   <td>
                     <button 
                         className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
+                        onClick={() => handleVisualizar(String(item.id_release))}
                         >Visualizar
                     </button>
 

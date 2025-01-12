@@ -233,16 +233,130 @@ export default function IncluirAula() {
               </div>
           </div>
        </form>
+
        <div className={estiloGlobal.barraFuncoes}>
         <div>
+        <select className={estiloLocal.inputPesquisaSelectForm}
+          style={{maxWidth: '100%'}}
+          >
+            <option value='' disabled >Selecione a questão</option>
+            {
+
+                <option
+                value={'item.id_questao'} 
+                key={'item.id_questao'}
+                >
+                  {'Escolha a Video'}
+                </option>
+
+            }
+          </select>
           <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`}>
             Incluir Video
-          </button> 
+          </button>        
+        </div>
+      </div>
 
+       <section className={estiloGlobal.grid}>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Sistema</th>
+                <th scope="col">Modulo</th>
+                <th scope="col">Submodulo</th>
+                <th scope="col" className="acoes">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+                  <tr className={estiloGlobal.griditens}>
+                  <td data-label="Nome">item.ID</td>
+                  <td data-label="Nome">item.nome_release</td>
+                  <td data-label="Versão Gestores">item.id_sistema</td>
+                  <td data-label="Versão GestorPDV">item.id_modulo</td>
+                  <td data-label="Versão SincData">item.id_submodulo</td>
+                  <td>
+                    <button 
+                        className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`}
+                        >{"Excluir"}
+                    </button>
+                  </td>
+                  </tr>
+            </tbody>
+          </table>
+        </section> 
+
+        <div className={estiloGlobal.barraFuncoes}>
+        <div>
+        <select className={estiloLocal.inputPesquisaSelectForm}
+          style={{maxWidth: '500px'}}
+          >
+            <option value='' disabled>Selecione a questão</option>
+            {
+
+                <option 
+                value={'item.id_questao'} 
+                key={'item.id_questao'}
+                >
+                  {'Escolha a FAQ'}
+                </option>
+
+            }
+          </select>
           <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`}>
             Incluir FAQ
-          </button> 
+          </button>        
+        </div>
+      </div>
 
+       <section className={estiloGlobal.grid}>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Sistema</th>
+                <th scope="col">Modulo</th>
+                <th scope="col">Submodulo</th>
+                <th scope="col" className="acoes">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+                  <tr className={estiloGlobal.griditens}>
+                  <td data-label="Nome">item.ID</td>
+                  <td data-label="Nome">item.nome_release</td>
+                  <td data-label="Versão Gestores">item.id_sistema</td>
+                  <td data-label="Versão GestorPDV">item.id_modulo</td>
+                  <td data-label="Versão SincData">item.id_submodulo</td>
+                  <td>
+                    <button 
+                        className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`}
+                        >{"Excluir"}
+                    </button>
+                  </td>
+                  </tr>
+            </tbody>
+          </table>
+        </section> 
+
+        <div className={estiloGlobal.barraFuncoes}>
+        <div >
+        <select className={estiloLocal.inputPesquisaSelectForm}
+          style={{maxWidth: '100%'}}
+          >
+            <option value='' disabled>Selecione a questão</option>
+            {
+
+                <option 
+                value={'item.id_questao'} 
+                key={'item.id_questao'}
+                >
+                  {'Escolha a questão'}
+                </option>
+
+            }
+          </select>
           <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`}>
             Incluir Questão
           </button>          
@@ -270,13 +384,7 @@ export default function IncluirAula() {
                   <td data-label="Versão SincData">item.id_submodulo</td>
                   <td>
                     <button 
-                        className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
-                        >Alterar
-                    </button>
-
-                    <button 
                         className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`}
-                        
                         >{"Excluir"}
                     </button>
                   </td>
