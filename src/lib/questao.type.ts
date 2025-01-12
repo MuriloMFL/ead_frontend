@@ -12,4 +12,5 @@ export interface QuestaoProps {
     alternativa_B  : string;
     alternativa_C  : string;
     alternativa_D  : string;
+    correta        : String;
 }

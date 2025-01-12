@@ -1,5 +1,6 @@
 "use client"
 import estiloGlobal from '../../page.module.scss'
+import estiloLocal  from './page.module.scss'
 import { Header } from '@/app/dashboard/componentes/header';
 import { api } from '@/servicos/api';
 import { getCookieServer } from '@/lib/cookieServidor';
@@ -19,7 +20,9 @@ export default function VisualizarProva(){
   const [id_submodulo, setIdSubModulo]             = useState<string | null>(null);
   const [nome_prova, setNomeProva]                 = useState<string>('');
 
-  const [questao, setQuestao]                      = useState<QuestaoProps[]>([]);
+  const [id_questao, setIdQuestao]                  = useState<string[]>([])
+  const [alternativaMarcada, setAlternativaMarcada] = useState<Record<string, string>>({});
+  const [questao, setQuestao]                       = useState<QuestaoProps[]>([]);
   const informacao_usuario = useUserInfo();
   const router = useRouter();
 
@@ -86,7 +89,42 @@ export default function VisualizarProva(){
       toast.warn("Nenhuma Questão encontrada para o ID fornecido.");
     }
 
-    async function btngravar(){
+    const handleSelecionarAlternativa = (idQuestao: string, alternativa: string) => {
+      setAlternativaMarcada((prev) => ({
+        ...prev,
+        [idQuestao]: alternativa,
+      }));
+    };
+
+    const btngravar = async () => {
+      try {
+        const token = await getCookieServer();
+        // Itera sobre todas as questões e envia uma por uma
+        for (const [idQuestao, alternativa] of Object.entries(alternativaMarcada)) {
+          await api.post(
+            "/criarmvquestao",
+            { 
+              id_sistema, 
+              id_submodulo, 
+              id_modulo, 
+              id_usuario: id_usuario, 
+              id_franquia: id_franquia, 
+              id_prova: id_prova,
+              id_questao: idQuestao,  
+              alternativa_marcada: alternativa, 
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        }
+      } catch (err: any) {
+        console.error(err);
+        toast.error("Erro ao atualizar Prova");
+      }
+    
       try {
         const token = await getCookieServer();
         await api.post(
@@ -95,9 +133,9 @@ export default function VisualizarProva(){
             id_sistema, 
             id_submodulo, 
             id_modulo, 
-            id_usuario : id_usuario, 
-            id_franquia : id_franquia, 
-            id_prova
+            id_usuario:   id_usuario, 
+            id_franquia:  id_franquia, 
+            id_prova:     id_prova,
           },
           {
             headers: {
@@ -107,11 +145,12 @@ export default function VisualizarProva(){
         );
         toast.success("Gravado com sucesso.");
         router.push("/provas");
-      } catch (err: any) {
-        console.error(err)
-        throw new Error('Erro ao atualizar Prova')
-      }        
-    }
+      } catch (err) {
+        console.error(err);
+        toast.error("Erro ao atualizar MVProva");
+      }
+      router.push('/provas')
+    };
 
     const btnCancelar = () => {
       document.cookie = "id_prova_visualizar=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
@@ -137,23 +176,51 @@ export default function VisualizarProva(){
        <div className={estiloGlobal.formCadastro}>
           {
             questao.map( (item) => (
-              <div className={estiloGlobal.formCadastro}>
+              <div className={estiloGlobal.formCadastro} key={item.id_questao}>
                 <h3>{item.questoes}</h3>
                 <div>
-                  <input type='radio' name={String(item.id_questao)}></input><p>{item.alternativa_A}</p>
+                  <input 
+                  type='radio' 
+                  name={String(item.id_questao)}
+                  value="A"
+                  onChange={() => handleSelecionarAlternativa(String(item.id_questao), "A")}
+                  checked={alternativaMarcada[item.id_questao] === "A"}                  
+                  ></input>
+                  <label style={{padding: 10}}>{item.alternativa_A}</label>
                 </div>
                 <div>
-                  <input type='radio' name={String(item.id_questao)}></input><p>{item.alternativa_B}</p>
+                  <input 
+                  type='radio' 
+                  name={String(item.id_questao)}
+                  value="B"
+                  onChange={() => handleSelecionarAlternativa(String(item.id_questao), "B")}
+                  checked={alternativaMarcada[item.id_questao] === "B"} 
+                  ></input>
+                  <label style={{padding: 10}}>{item.alternativa_B}</label>
                 </div>
 
                 {item.alternativa_C && (
                 <div>
-                  <input type='radio' name={String(item.id_questao)}></input><p>{item.alternativa_C}</p>
+                  <input 
+                  type='radio' 
+                  name={String(item.id_questao)}
+                  value="C"
+                  onChange={() => handleSelecionarAlternativa(String(item.id_questao), "C")}
+                  checked={alternativaMarcada[item.id_questao] === "C"} 
+                  ></input>
+                  <label style={{padding: 10}}>{item.alternativa_C}</label>
                 </div>
                 )}
                 {item.alternativa_D && (
                   <div>
-                  <input type='radio' name={String(item.id_questao)}></input><p>{item.alternativa_D}</p>
+                  <input 
+                  type='radio' 
+                  name={String(item.id_questao)}
+                  value="D"
+                  onChange={() => handleSelecionarAlternativa(String(item.id_questao), "D")}
+                  checked={alternativaMarcada[item.id_questao] === "D"}                   
+                  ></input>
+                  <label style={{padding: 10}}>{item.alternativa_D}</label>
                 </div>
                 )}
               </div>

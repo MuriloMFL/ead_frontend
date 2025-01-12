@@ -6,9 +6,12 @@ import { provaProps } from '@/lib/prova.types'
 import { buscaDados } from '@/servicos/buscar'
 import { excluirDados } from '@/servicos/excluir'
 import { useRouter } from 'next/navigation'
+import useUserInfo from '@/servicos/useUserInfo'
+import { toast } from 'react-toastify'
 
 export default function CadastrarProvas(){
   const [id_prova, setIdProva] = useState<string | null>(null)
+  const [id_usuario, setIdUsuario] = useState<string | null>(null)
   const [nome_prova, setNomeProba] = useState<string>('')
   const [status, setStatus] = useState<string>('true')
   const [prova, setProva] = useState<provaProps[]>([])
@@ -17,12 +20,13 @@ export default function CadastrarProvas(){
     const handlebuscar = async () => {
       const filtros = {
         status: status ==='true'? true : status ==='false' ? false : undefined,
-        nome_prova: nome_prova
+        nome_prova: nome_prova,
       }
+      
       const response = await buscaDados('/listarprova', filtros)
       setProva(response)
     }
-
+    
     useEffect(()=>{
       handlebuscar();
     },[]);

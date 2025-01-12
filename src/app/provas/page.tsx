@@ -5,18 +5,29 @@ import { useEffect, useState } from 'react'
 import { buscaDados } from '@/servicos/buscar'
 import { useRouter } from 'next/navigation'
 import { provaProps } from '@/lib/prova.types'
+import useUserInfo from '@/servicos/useUserInfo'
+import { toast } from 'react-toastify'
 
 export default function Provas(){
-  const [id_prova, setIdProva] = useState<string | null>(null)
+  const [id_prova, setIdProva]     = useState<string | null>(null)
+  const [id_usuario, setIdUsuario] = useState<string>('');
   const [nome_prova, setNomeProba] = useState<string>('')
-  const [status, setStatus] = useState<string>('true')
-  const [prova, setProva] = useState<provaProps[]>([])
-  const router = useRouter();
+  const [status, setStatus]        = useState<string>('true')
+  const [prova, setProva]          = useState<provaProps[]>([])
+  const informacao_usuario         = useUserInfo();
+  const router                     = useRouter();
+
+    useEffect(() => {
+      if (informacao_usuario?.id_usuario) {
+        setIdUsuario(String(informacao_usuario?.id_usuario));
+      }
+    }, [informacao_usuario]);
 
     const handlebuscar = async () => {
       const filtros = {
         status: status ==='true'? true : status ==='false' ? false : undefined,
-        nome_prova: nome_prova
+        nome_prova: nome_prova,
+        id_usuario : Number(id_usuario)
       }
       const response = await buscaDados('/listarprova', filtros)
       setProva(response)
@@ -24,7 +35,7 @@ export default function Provas(){
 
     useEffect(()=>{
       handlebuscar();
-    },[]);
+    },[id_usuario]);
 
     const handleVisualizar = (id_prova : number) =>{
       document.cookie = `id_prova_visualizar=${id_prova}; path=/; max-age=86000;`
@@ -84,11 +95,18 @@ export default function Provas(){
                   <td data-label="Modulo">{item.nome_modulo}</td>
                   <td data-label="SubModulo">{item.nome_submodulo}</td>
                   <td>
-                    <button 
+                  {
+                    item.nota ? (
+                      `${item.nota}%`
+                    ) : (
+                      <button 
                         className={`${estiloGlobal.btn} ${estiloGlobal.alterar}`} 
                         onClick={() => handleVisualizar(Number(item.id_prova))}
-                        >Visualizar
-                    </button>
+                      >
+                        Fazer
+                      </button>
+                    )
+                  }
                   </td>
                 </tr>
                 ))

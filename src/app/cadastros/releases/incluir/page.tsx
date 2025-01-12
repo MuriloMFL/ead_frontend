@@ -13,6 +13,7 @@ import useUserInfo from '@/servicos/useUserInfo';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { ItemReleaseProps } from '@/lib/reliaseItem.type';
+import { Editor } from '@tinymce/tinymce-react';
 
 export default function IncluirRelease() {
   const [id_release, setIdRelease]                  = useState<string | null>(null)
@@ -521,7 +522,7 @@ export default function IncluirRelease() {
           </div> 
 
           <form className={`${estiloGlobal.formCadastro} ${estiloGlobal.gridCadastros}`}>
-          <div>
+          <div style={{width: '100%'}}>
               <div>                
                 <select 
                   required
@@ -607,15 +608,22 @@ export default function IncluirRelease() {
               </div>
             
               <div>
-                <br/>
-                <label>Digite as Alterações no sistema</label>
-                <textarea 
-                style={{width: '100%', height: '300px'}}
-                className={estiloGlobal.inputPesquisa}
+              <h4>Editor de Texto</h4>
+              <Editor
+                apiKey="jd98ov351unavy3w4cgb8e4tmj0v3xd9poyi5b4k8bcgay8t" // Adicione sua chave API do TinyMCE se necessário
+                init={{
+                  height: 1000,
+                  menubar: true,
+                  plugins: ['advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor'],
+                  toolbar: "undo redo | blocks fontfamily fontsize | forecolor backcolor | bold italic |image media | link | alignleft aligncenter alignright",
+                  branding: false,
+                }}
                 value={observacao}
-                onChange={(e) => setobservacao(e.target.value)}
-                />
-              </div>
+                onEditorChange={(newContent) => {
+                  setobservacao(newContent);
+                }}
+              />
+            </div>
           </div>
        </form>       
         </>
