@@ -8,5 +8,5 @@ export interface provaProps {
     nome_submodulo: string
     nome_prova    : string
     status        : boolean
-    nota?          : number | null
+    nota?         : number | null
 }

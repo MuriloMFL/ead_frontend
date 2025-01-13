@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 
 export default function Provas(){
   const [id_prova, setIdProva]     = useState<string | null>(null)
-  const [id_usuario, setIdUsuario] = useState<string>('');
+  const [id_usuario, setIdUsuario] = useState<string | null>(null);
   const [nome_prova, setNomeProba] = useState<string>('')
   const [status, setStatus]        = useState<string>('true')
   const [prova, setProva]          = useState<provaProps[]>([])
@@ -20,6 +20,7 @@ export default function Provas(){
     useEffect(() => {
       if (informacao_usuario?.id_usuario) {
         setIdUsuario(String(informacao_usuario?.id_usuario));
+        toast(id_usuario)
       }
     }, [informacao_usuario]);
 
@@ -27,7 +28,7 @@ export default function Provas(){
       const filtros = {
         status: status ==='true'? true : status ==='false' ? false : undefined,
         nome_prova: nome_prova,
-        id_usuario : Number(id_usuario)
+        id_usuario : String(id_usuario)
       }
       const response = await buscaDados('/listarprova', filtros)
       setProva(response)

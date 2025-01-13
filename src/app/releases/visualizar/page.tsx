@@ -99,11 +99,10 @@ export default function VisualizarReleaseItem() {
        </div>
        {
         release.map((item) =>(
-        <div className={estiloGlobal.dados} style={{width: '100%'}} key={item.id_release}>
+        <div className={estiloGlobal.dados} style={{width: '100%'}} key={item.id_item_release}>
           <div className={`${estiloGlobal.titulo} ${estiloGlobal.grid}`}>
             <h1>{item.nome_release}</h1>
           </div>
-
           <div className={estiloGlobal.titulo}>
             <h3>
               <b>Sistema:</b> {item.nome_sistema} | 

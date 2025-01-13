@@ -75,10 +75,11 @@ export default function Provas(){
                 <th scope="col" className="acoes">Ações</th>
               </tr>
             </thead>
-            <tbody>
+            
               {
                 release.map((item) => (
-                  <tr className={estiloGlobal.griditens} key={item.id_release}>
+                  <tbody key={item.id_release}>
+                  <tr className={estiloGlobal.griditens} >
                   <td data-label="Numero">{item.numero_release}</td>
                   <td data-label="Data">{item.data_inclusao}</td>
                   <td data-label="Versão Gestores">{item.versao_gestores}</td>
@@ -94,10 +95,11 @@ export default function Provas(){
                     </button>
                   </td>
                 </tr>
+                </tbody>
                 ))
               }
 
-            </tbody>
+            
           </table>
         </section>           
         </main>
