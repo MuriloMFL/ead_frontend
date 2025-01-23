@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build && sass --no-source-map ./src/app/globals.scss ./public/styles.css",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "git pull && npm install && next build && pm2 restart ead-front"
   },
   "dependencies": {
     "@tinymce/tinymce-react": "^5.1.1",
