@@ -16,7 +16,7 @@
   "isolatedModules": true,
   "jsx": "preserve",
   "incremental": true,
-  "useDefineForClassFields": true, // Adicionado para compatibilidade com o Next.js 13
+  "useDefineForClassFields": true,
   "plugins": [
     {
       "name": "next"

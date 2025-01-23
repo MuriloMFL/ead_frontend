@@ -7,7 +7,6 @@ import React ,{ useState, useEffect} from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import useUserInfo from '@/servicos/useUserInfo';
-import RichTextEditor from '@/componentes/Editor';
 
 
 export default function VisualizarFaq() {

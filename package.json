@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && sass --no-source-map ./src/styles.scss ./public/styles.css",
+    "build": "next build && sass --no-source-map ./src/app/globals.scss ./public/styles.css",
     "start": "next start",
     "lint": "next lint"
   },
