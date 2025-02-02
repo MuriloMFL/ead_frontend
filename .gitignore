@@ -10,6 +10,7 @@
 /coverage
 *.zip
 .env
+
 # next.js
 /.next/
 .next_/
