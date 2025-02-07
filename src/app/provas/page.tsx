@@ -47,7 +47,7 @@ export default function Provas(){
         <Header />
         <main className={estiloGlobal.dados}>
             <div className={estiloGlobal.titulo}>
-                <h1>Provas</h1>
+                <h1>Simulados</h1>
             </div>
         <div className={estiloGlobal.barraFuncoes}>
          <form  onSubmit={(e) => { e.preventDefault(); handlebuscar(); }}>
