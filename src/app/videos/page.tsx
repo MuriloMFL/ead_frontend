@@ -6,18 +6,22 @@ import { videoProps } from '@/lib/video.lype'
 import { useRouter } from 'next/navigation'
 import { buscaDados } from '@/servicos/buscar'
 import { toast } from 'react-toastify'
+import { SistemaProps } from '@/lib/sistema.type'
 
 export default function Videos(){
     const [id_video, setIdVideo] = useState<string | null>(null)
     const [nome_video, setNomeVideo] = useState<string>()
+    const [id_sistema, setIdSistema] = useState<string>()
+    const [sistema, setSistema]      = useState<SistemaProps[]>([])
     const [status, setStatus] = useState<string>('true')
     const [video, setVideo] = useState<videoProps[]>([])
     const router = useRouter();
     
     const handlebuscar = async () => {
-      const filtros = {
+      const filtros: any = {
         status : status ==='true' ? true : status ==='false' ? false : false,
-        nome_video: nome_video
+        nome_video: nome_video,
+        id_sistema: Number(id_sistema) > 0 ? id_sistema : undefined, 
       }
       const response = await buscaDados('/listarvideo', filtros)
       setVideo(response)
@@ -26,6 +30,20 @@ export default function Videos(){
       handlebuscar()
     },[])
 
+    //Buscar Sistemas
+    const selecionarSistema = async () => {
+      const filtros = {
+        status: true,
+      };
+      const sistema = await buscaDados('/listarsistema', filtros);
+      setSistema(sistema);
+    };
+  
+    useEffect(() => {
+      selecionarSistema();
+    }, []);
+
+    // Visualizar Video Selecionado
     const handleVisualizar = async (id_video: number) =>{
       document.cookie = `id_video_visualizar=${id_video}; path=/; max-age=86000`
         router.push('/videos/visualizar')
@@ -42,6 +60,23 @@ export default function Videos(){
           <div className={estiloGlobal.barraFuncoes}>
           <form  onSubmit={(e) => { e.preventDefault(); handlebuscar(); }}>
           <div>
+
+            <select 
+              className={estiloGlobal.inputPesquisaSelectForm}
+              name='id_sistema'
+              value={id_sistema}
+              onChange={(e) => {setIdSistema(e.target.value)}}
+              >
+              <option value=''>
+                Selecione um Sistema
+              </option>
+              {sistema.map( (item) =>(
+                <option key={item.id_sistema} value={item.id_sistema}>
+                  {item.nome_sistema}
+                </option>                    
+              ))}
+            </select>
+
             <select 
               className={estiloGlobal.inputPesquisaSelect} 
               value={status} 
