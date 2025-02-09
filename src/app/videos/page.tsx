@@ -7,28 +7,37 @@ import { useRouter } from 'next/navigation'
 import { buscaDados } from '@/servicos/buscar'
 import { toast } from 'react-toastify'
 import { SistemaProps } from '@/lib/sistema.type'
+import useUserInfo from '@/servicos/useUserInfo'
 
 export default function Videos(){
-    const [id_video, setIdVideo] = useState<string | null>(null)
-    const [nome_video, setNomeVideo] = useState<string>()
-    const [id_sistema, setIdSistema] = useState<string>()
-    const [sistema, setSistema]      = useState<SistemaProps[]>([])
-    const [status, setStatus] = useState<string>('true')
-    const [video, setVideo] = useState<videoProps[]>([])
-    const router = useRouter();
+    const [id_video, setIdVideo]      = useState<string | null>(null)
+    const [nome_video, setNomeVideo]  = useState<string>()
+    const [id_sistema, setIdSistema]  = useState<string>()
+    const [finalizado, setFinalizado] = useState<string>('false')
+    const [sistema, setSistema]       = useState<SistemaProps[]>([])
+    const [video, setVideo]           = useState<videoProps[]>([])
+    const [id_usuario, setIdUsuario]  = useState<string>()
+    const informacao_usuario          = useUserInfo();
+    const router                      = useRouter();
     
     const handlebuscar = async () => {
-      const filtros: any = {
-        status : status ==='true' ? true : status ==='false' ? false : false,
+      const filtros: any = await {
+        status : true,
         nome_video: nome_video,
         id_sistema: Number(id_sistema) > 0 ? id_sistema : undefined, 
+        finalizado: finalizado === 'true' ? true : finalizado === 'false' ? false : undefined,
+        id_usuario: Number(id_usuario)
       }
       const response = await buscaDados('/listarvideo', filtros)
       setVideo(response)
     }
-    useEffect ( ()=>{
-      handlebuscar()
-    },[])
+    useEffect (  ()=>{
+      setIdUsuario(String(informacao_usuario?.id_usuario));
+      if (id_usuario){
+       handlebuscar()
+      }
+
+    },[id_usuario])
 
     //Buscar Sistemas
     const selecionarSistema = async () => {
@@ -47,7 +56,6 @@ export default function Videos(){
     const handleVisualizar = async (id_video: number) =>{
       document.cookie = `id_video_visualizar=${id_video}; path=/; max-age=86000`
         router.push('/videos/visualizar')
-        
     }  
 
     return (
@@ -79,12 +87,13 @@ export default function Videos(){
 
             <select 
               className={estiloGlobal.inputPesquisaSelect} 
-              value={status} 
-              onChange={(e) => setStatus(e.target.value)}
+              value={finalizado} 
+              onChange={(e) => setFinalizado(e.target.value)}
             >
-              <option value="true">Ativo</option>
-              <option value="false">Inativo</option>
+              <option value="true">Finalizado</option>
+              <option value="false">Pendente</option>
             </select>
+
             <input 
               type="text" 
               placeholder="Pesquisar Video" 
@@ -92,8 +101,10 @@ export default function Videos(){
               value={nome_video}
               onChange={(e) => setNomeVideo(e.target.value)}
             />
+
             <button type="submit" className={estiloGlobal.btn}>Buscar</button>
             <button className={`${estiloGlobal.btn} ${estiloGlobal.imprimir}`} onClick={() => window.print()}>Imprimir</button>
+          
           </div>
         </form>
         </div>

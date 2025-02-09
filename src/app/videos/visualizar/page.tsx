@@ -18,6 +18,7 @@ export default function IncluirVideo() {
   const [nome_video, setNomeVideo]                 = useState<string>('');
   const [link, setLink]                            = useState<string>('');
   const [observacao, setObservacao]                = useState<string>('');
+  const [finalizado, setFinalizado]                = useState<string>('');
   const informacao_usuario = useUserInfo();
   const router = useRouter();
 
@@ -31,7 +32,7 @@ export default function IncluirVideo() {
           detalharvideo(cookies)
         }
     }, [])
-    
+
     useEffect(() => {
       // Verifica quando informacao_usuario está disponível e atualiza os estados
       if (informacao_usuario?.id_usuario && informacao_usuario?.id_franquia) {
@@ -41,7 +42,7 @@ export default function IncluirVideo() {
     }, [informacao_usuario]);
 
     async function detalharvideo(id_video: string){
-      const token = await getCookieServer();
+      const token = await getCookieServer();      
       try {
         const { data } = await api.get(`/detalharvideo/${id_video}`, {
           headers: {
