@@ -21,7 +21,6 @@ export default function Provas(){
     useEffect(() => {
       if (informacao_usuario?.id_usuario) {
         setIdUsuario(String(informacao_usuario?.id_usuario));
-        toast(id_usuario)
       }
     }, [informacao_usuario]);
 
