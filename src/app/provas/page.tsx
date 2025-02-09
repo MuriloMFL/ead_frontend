@@ -10,12 +10,13 @@ import { toast } from 'react-toastify'
 
 export default function Provas(){
   const [id_prova, setIdProva]     = useState<string | null>(null)
-  const [id_usuario, setIdUsuario] = useState<string | null>(null);
-  const [nome_prova, setNomeProba] = useState<string>('')
-  const [status, setStatus]        = useState<string>('true')
-  const [prova, setProva]          = useState<provaProps[]>([])
-  const informacao_usuario         = useUserInfo();
-  const router                     = useRouter();
+  const [id_usuario, setIdUsuario]  = useState<string | null>(null);
+  const [nome_prova, setNomeProva]  = useState<string>('')
+  const [status, setStatus]         = useState<string>('true')
+  const [finalizado, setFinalizado] = useState<string>('false')
+  const [prova, setProva]           = useState<provaProps[]>([])
+  const informacao_usuario          = useUserInfo();
+  const router                      = useRouter();
 
     useEffect(() => {
       if (informacao_usuario?.id_usuario) {
@@ -27,6 +28,7 @@ export default function Provas(){
     const handlebuscar = async () => {
       const filtros = {
         status: status ==='true'? true : status ==='false' ? false : undefined,
+        finalizado: finalizado ==='true' ? true : finalizado ==='false' ? false : undefined,
         nome_prova: nome_prova,
         id_usuario : String(id_usuario)
       }
@@ -60,12 +62,21 @@ export default function Provas(){
               <option value="true">Ativo</option>
               <option value="false">Inativo</option>
             </select>
+
+            <select 
+              className={estiloGlobal.inputPesquisaSelect} 
+              value={finalizado} 
+              onChange={(e) => setFinalizado(e.target.value)}
+            >
+              <option value="false">Pendente</option>
+              <option value="true">Finalizado</option>
+            </select>
             <input 
               type="text" 
               placeholder="Pesquisar Provas" 
               className={estiloGlobal.inputPesquisa} 
               value={nome_prova}
-              onChange={(e) => setNomeProba(e.target.value)}
+              onChange={(e) => setNomeProva(e.target.value)}
             />
             <button type="submit" className={estiloGlobal.btn}>Buscar</button>
             <button className={`${estiloGlobal.btn} ${estiloGlobal.imprimir}`} onClick={() => window.print()}>Imprimir</button>

@@ -6,6 +6,7 @@ import { ReleaseProps } from "@/lib/release.type";
 import { buscaDados } from "@/servicos/buscar";
 import useUserInfo from "@/servicos/useUserInfo";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export function DashboardPrincipal(){
     const [status, setStatus] = useState<string>('true')
@@ -32,16 +33,6 @@ export function DashboardPrincipal(){
         handlebuscar()
     }, [])
 
-    const BuscarProvas = async () => {
-      const filtros = {
-        id_usuario: informacao_usuario?.id_usuario
-      }
-      const provas = await buscaDados('/contarprovas', filtros)
-      setNotaProva(provas)
-    }
-    useEffect ( ()=> {
-      BuscarProvas()
-    }, [nota_prova])
 
     const BuscarModulos = async () => {
       const filtros = {
@@ -81,6 +72,18 @@ export function DashboardPrincipal(){
       BuscarAulas()
     }, [qtd_aulas])
 
+    const BuscarProvas = async () => {
+      const filtros = {
+        id_usuario: informacao_usuario?.id_usuario
+      }
+      const provas = await buscaDados('/contarprovas', filtros)
+      setNotaProva(provas)
+    }
+
+    useEffect(() => {
+      BuscarProvas();
+    }, [informacao_usuario]);
+
     const handleVisualizar = (id_release : string) =>{
       document.cookie = `id_release_visualizar=${id_release}; path=/; max-age=86000`
       router.push('/releases/visualizar')
@@ -109,13 +112,13 @@ export function DashboardPrincipal(){
                 </div>
                 <div className={estiloLocal.amostra}>
                     <div className={estiloLocal.tituloAmostras}><h3>Questões</h3></div>
-                    <h1 className={estiloLocal.dadosAmostra}>90%</h1>
+                    <h1 className={estiloLocal.dadosAmostra}>{nota_prova}%</h1>
                     <p className={estiloLocal.dadosrodape}>de acertos</p>
                 </div>
 
                 <div className={estiloLocal.amostra}>
                     <div className={estiloLocal.tituloAmostras}><h3>Provas</h3></div>
-                    <h1 className={estiloLocal.dadosAmostra}>{nota_prova}%</h1>
+                    <h1 className={estiloLocal.dadosAmostra}>{nota_prova || 0}%</h1>
                     <p className={estiloLocal.dadosrodape}>De acertos</p>
                 </div>
 
