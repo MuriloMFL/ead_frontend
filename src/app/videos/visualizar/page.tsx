@@ -7,6 +7,7 @@ import { useState, useEffect} from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import useUserInfo from '@/servicos/useUserInfo';
+import { strict } from 'assert';
 
 export default function IncluirVideo() {
   const [id_video, setIdVideo]                     = useState<string | null>(null);
@@ -41,6 +42,25 @@ export default function IncluirVideo() {
       }
     }, [informacao_usuario]);
 
+    async function verificarVideoVisto(id_video: string,  id_usuario: string) {
+      const token = await getCookieServer();
+
+      try {
+        const {data} = await api.get('/verificarmvvideo', {
+          params:{
+            id_video : id_video,
+            id_usuario: Number(id_usuario)
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          } 
+        })
+        toast("ok")
+      }catch {
+        throw new Error("Erro ao Verificar Status do Video")
+      }
+    }
+
     async function detalharvideo(id_video: string){
       const token = await getCookieServer();      
       try {
@@ -58,6 +78,7 @@ export default function IncluirVideo() {
           setNomeVideo   (data.nome_video || "")
           setLink        (data.link || "")
           setObservacao  (data.observacao || "")
+          setFinalizado  (data.finalizado || "")
         } else {
           toast.warn("Nenhum Video encontrada para o ID fornecido.");
         }
@@ -119,8 +140,17 @@ export default function IncluirVideo() {
 
        <div className={estiloGlobal.barraFuncoes}>
           <div>
-            <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={btngravar}>Marcar Como Visto</button>
-            <button className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`} onClick={btnCancelar}>Voltar</button>
+            {
+              finalizado ? (
+                <button className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`} onClick={btnCancelar}>Voltar</button>
+              ) : (
+                <>
+                <button className={`${estiloGlobal.btn} ${estiloGlobal.incluir}`} onClick={btngravar}>Marcar Como Visto</button>
+                <button className={`${estiloGlobal.btn} ${estiloGlobal.excluir}`} onClick={btnCancelar}>Voltar</button>                
+                </>
+              )
+            }
+            
           </div>
        </div>
 

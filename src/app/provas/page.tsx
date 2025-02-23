@@ -53,6 +53,7 @@ export default function Provas(){
         <div className={estiloGlobal.barraFuncoes}>
          <form  onSubmit={(e) => { e.preventDefault(); handlebuscar(); }}>
           <div>
+            
             <select 
               className={estiloGlobal.inputPesquisaSelect} 
               value={status} 
@@ -70,13 +71,13 @@ export default function Provas(){
               <option value="false">Pendente</option>
               <option value="true">Finalizado</option>
             </select>
-            <input 
-              type="text" 
-              placeholder="Pesquisar Provas" 
-              className={estiloGlobal.inputPesquisa} 
-              value={nome_prova}
-              onChange={(e) => setNomeProva(e.target.value)}
-            />
+                <input 
+                type="text" 
+                placeholder="Pesquisar Provas" 
+                className={estiloGlobal.inputPesquisa} 
+                value={nome_prova}
+                onChange={(e) => setNomeProva(e.target.value)}
+              />
             <button type="submit" className={estiloGlobal.btn}>Buscar</button>
             <button className={`${estiloGlobal.btn} ${estiloGlobal.imprimir}`} onClick={() => window.print()}>Imprimir</button>
           </div>

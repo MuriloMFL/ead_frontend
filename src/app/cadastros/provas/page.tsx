@@ -21,6 +21,7 @@ export default function CadastrarProvas(){
       const filtros = {
         status: status ==='true'? true : status ==='false' ? false : undefined,
         nome_prova: nome_prova,
+        id_usuario: 1
       }
       
       const response = await buscaDados('/listarprova', filtros)

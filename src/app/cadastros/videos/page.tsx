@@ -8,16 +8,18 @@ import { buscaDados } from '@/servicos/buscar'
 import { excluirDados } from '@/servicos/excluir'
 
 export default function CadastrarVideos(){
-    const [id_video, setIdVideo] = useState<string | null>(null)
-    const [nome_video, setNomeVideo] = useState<string>()
-    const [status, setStatus] = useState<string>('true')
-    const [video, setVideo] = useState<videoProps[]>([])
-    const router = useRouter();
-    
+    const [id_video, setIdVideo]        = useState<string | null>(null)
+    const [nome_video, setNomeVideo]    = useState<string>()
+    const [status, setStatus]           = useState<string>('true')
+    const [video, setVideo]             = useState<videoProps[]>([])
+    const [id_usuario, setIdUsuario]    = useState<string | null>('1')
+    const router                        = useRouter();
+
     const handlebuscar = async () => {
       const filtros = {
         status : status ==='true' ? true : status ==='false' ? false : false,
-        nome_video: nome_video
+        nome_video: nome_video,
+        id_usuario: Number(id_usuario)
       }
       const response = await buscaDados('/listarvideo', filtros)
       setVideo(response)
@@ -66,6 +68,7 @@ export default function CadastrarVideos(){
             >
               <option value="true">Ativo</option>
               <option value="false">Inativo</option>
+
             </select>
             <input 
               type="text" 

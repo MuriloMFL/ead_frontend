@@ -7,26 +7,7 @@ import { FranquiaProps } from '@/lib/franquia.type';
 import { useState, useEffect} from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { Footer } from '@/app/dashboard/componentes/footer';
-
-async function buscarFranquias(filtros: { status?: boolean; nome?: string; responsavel?: string }): Promise<FranquiaProps[]> {
-  try {
-    const token = await getCookieServer();
-    const { status, nome, responsavel } = filtros;
-
-    const response = await api.get('/listarfranquia', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: { status, nome, responsavel },  
-    });
-
-    return response.data || [];
-  } catch (err) {
-    console.error('Erro ao buscar franquias:', err);
-    return [];
-  }
-}
+import { buscaDados } from '@/servicos/buscar';
 
 export default function CadastrarFranquias() {
 
@@ -41,7 +22,7 @@ export default function CadastrarFranquias() {
       nome: nome 
     };
 
-    const resultado = await buscarFranquias(filtros);
+    const resultado = await buscaDados('/listarfranquia', filtros);
     setFranquias(resultado);
   };
 

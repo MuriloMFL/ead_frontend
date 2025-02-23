@@ -72,9 +72,9 @@ export default function IncluirRelease() {
       setVersaoGestores(data.versao_gestores || "")
       setVersaoSincdata(data.versao_sincdata || "")
       setIdUsuario(informacao_usuario?.id_usuario || "") 
-      setFinalizado(data.finalizado || false) 
+      setFinalizado(data.finalizado === true ? "true" : data.finalizado === false ? "false" : false|| "") 
     }else {
-      toast('Erro ao buscar informações.')
+      toast.error('Erro ao buscar informações.')
     }
     } catch (err) {
       toast.error("Erro ao buscar os dados.");
@@ -133,7 +133,7 @@ export default function IncluirRelease() {
 
   const btnIncluirItem = async () => {
     if(!numero_release || !versao_gestores || !versao_sincdata || !versao_gestorpdv || !versao_balcao) {
-      toast('Dados do cabeçalho Devem ser preenchidos')
+      toast.info('Dados do cabeçalho Devem ser preenchidos')
       return
     }
 
@@ -148,7 +148,7 @@ export default function IncluirRelease() {
           versao_gestorpdv, 
           versao_balcao,
           id_usuario : informacao_usuario?.id_usuario,
-          finalizado : Boolean(finalizado)
+          finalizado : finalizado
         }, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -156,9 +156,9 @@ export default function IncluirRelease() {
         })
         setIdRelease(response.data.id_release)
 
-        toast('Cadastrado com Sucesso')
+        toast.success('Cadastrado com Sucesso')
       } catch (error) {
-        toast( 'Erro ao cadastrar Release')
+        toast.error( 'Erro ao cadastrar Release')
         throw new Error('Erro ao cadastrar Release')
       }
     }
@@ -170,7 +170,7 @@ export default function IncluirRelease() {
   const btnGravarItem = async () => {
 
     if(!nomeItemRelease || !id_sistema || !id_modulo || !id_submodulo || !observacao){
-      toast('Complete as informações para gravar')
+      toast.info('Complete as informações para gravar')
       return
     }
     if(!id_item_release){
@@ -193,7 +193,7 @@ export default function IncluirRelease() {
       }) 
       toast.success("Gravado com sucesso.");
     } catch (error) {
-      toast('Erro ao criar Item da Release')
+      toast.error('Erro ao criar Item da Release')
       throw new Error('Erro ao criar Item da Release')
       
     }
@@ -210,7 +210,8 @@ export default function IncluirRelease() {
           id_submodulo,
           correcao, 
           alteracao, 
-          observacao
+          observacao,
+          finalizado
         }, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -218,7 +219,7 @@ export default function IncluirRelease() {
         })    
         toast.success("Atualizado com sucesso."); 
       } catch (error) {
-        toast('Erro o atualizar Item da Release')
+        toast.error('Erro o atualizar Item da Release')
         throw new Error('Erro ao atualizar Item da Release')
       }
  
@@ -244,7 +245,7 @@ export default function IncluirRelease() {
       })
       handlebuscar();
     } catch (error) {
-      toast('Erro ao deletar item')
+      toast.error('Erro ao deletar item')
     }
   }
 
@@ -255,7 +256,7 @@ export default function IncluirRelease() {
 
   const btnGravar = async () =>{
     if(!numero_release || !versao_gestores || !versao_sincdata || !versao_gestorpdv || !versao_balcao) {
-      toast('Dados do cabeçalho Devem ser preenchidos')
+      toast.info('Dados do cabeçalho Devem ser preenchidos')
       return
     }
 
@@ -276,10 +277,10 @@ export default function IncluirRelease() {
             Authorization: `Bearer ${token}`
           }
         })
-        toast('Cadastrado com Sucesso')
+        toast.success('Cadastrado com Sucesso')
 
       } catch (error) {
-        toast( 'Erro ao cadastrar Release')
+        toast.error( 'Erro ao cadastrar Release')
         throw new Error('Erro ao cadastrar Release')
       }
     }else {
@@ -293,15 +294,15 @@ export default function IncluirRelease() {
           versao_gestorpdv, 
           versao_balcao,
           id_usuario : informacao_usuario?.id_usuario,
-          finalizado : Boolean(finalizado)
+          finalizado : finalizado
         }, {
           headers:{
              Authorization: `Bearer ${token}`
           }
         })
-        toast('Atualizado com sucesso')
+        toast.success('Atualizado com sucesso')
       } catch (error) {
-        toast('Erro Ao atualizar a Relese')
+        toast.error('Erro Ao atualizar a Relese')
         throw new Error('Erro Ao atualizar a Relese')    
       }
     }  

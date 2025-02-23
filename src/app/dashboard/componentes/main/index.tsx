@@ -24,6 +24,7 @@ export function DashboardPrincipal(){
     const handlebuscar = async () => {
         const filtros = {
         status : true,
+        finalizado: true,
         }
         const release = await buscaDados('/listarrelease', filtros)
         setRelease(release);
@@ -73,21 +74,24 @@ export function DashboardPrincipal(){
     }, [qtd_aulas])
 
     const BuscarProvas = async () => {
-      const filtros = {
-        id_usuario: informacao_usuario?.id_usuario
-      }
-      const provas = await buscaDados('/contarprovas', filtros)
-      setNotaProva(provas)
+        if (!informacao_usuario?.id_usuario) return;
+        
+        const filtros = {
+          id_usuario: informacao_usuario?.id_usuario
+        }
+        const provas = await buscaDados('/contarprovas', filtros)
+        setNotaProva(provas)
     }
 
     useEffect(() => {
       BuscarProvas();
-    }, [informacao_usuario]);
+    }, [id_usuario]);
 
     const handleVisualizar = (id_release : string) =>{
       document.cookie = `id_release_visualizar=${id_release}; path=/; max-age=86000`
       router.push('/releases/visualizar')
     }
+
     return(
         <main className={estiloGlobal.dados}>
             <div className={estiloGlobal.titulo}>

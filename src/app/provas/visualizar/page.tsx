@@ -173,7 +173,7 @@ export default function VisualizarProva(){
           </div>
        </div>
 
-       <div className={estiloGlobal.formCadastro}>
+       <div className={estiloGlobal.formCadastro} >
           {
             questao.map( (item) => (
               <div className={estiloGlobal.formCadastro} key={item.id_questao}>

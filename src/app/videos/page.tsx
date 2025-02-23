@@ -25,7 +25,7 @@ export default function Videos(){
         status : true,
         nome_video: nome_video,
         id_sistema: Number(id_sistema) > 0 ? id_sistema : undefined, 
-        finalizado: finalizado === 'true' ? true : finalizado === 'false' ? false : undefined,
+        finalizado   : finalizado ==='true' ? true : finalizado ==='false' ? false : undefined,
         id_usuario: Number(id_usuario)
       }
       const response = await buscaDados('/listarvideo', filtros)
@@ -92,6 +92,7 @@ export default function Videos(){
             >
               <option value="true">Finalizado</option>
               <option value="false">Pendente</option>
+              <option value="todos">Todos</option>
             </select>
 
             <input 

@@ -49,7 +49,7 @@ export default function IncluirVideo() {
             Authorization: `Bearer ${token}`,
           }        
         });
-
+  
         if (data) {
           setIdVideo(data.id_video || "")
           setIdSubmodulo(data.id_submodulo || "");
@@ -59,7 +59,6 @@ export default function IncluirVideo() {
           setLink(data.link || "")
           setObservacao(data.observacao || "")
           setOrder(data.order || "")
-          setCapa(data.capa || "");
         } else {
           toast.warn("Nenhum Video encontrada para o ID fornecido.");
         }
@@ -69,58 +68,45 @@ export default function IncluirVideo() {
       }
     }
 
-    useEffect(() => {
-      if (capa) {
-        // Se capa for um arquivo local (File)
-        if (capa instanceof File) {
-          setPreviewCapa(URL.createObjectURL(capa));  // Para visualização local do File
-        } else {
-          // Caso contrário, monta a URL do servidor
-          setPreviewCapa(capa)
+    async function btngravar(){
+        
+        if(!id_video){
+          const token = await getCookieServer();
+          try {
+            await api.post(
+              "/criarvideo",
+              { id_sistema, id_modulo, id_submodulo, nome_video, link, observacao, order, capa },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            toast.success("Gravado com sucesso.");
+            router.push("../../cadastros/videos");
+          } catch {
+            new Error('Erro');
+          }
+        }else {
+        try {
+          const token = await getCookieServer();
+          await api.put(
+            "/atualizarvideo",
+            { id_video, id_sistema, id_modulo, id_submodulo, nome_video, link, observacao, order, capa},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+    
+          toast.success("Gravado com sucesso.");
+          router.push("../../cadastros/videos");
+        } catch (err: any) {
+          throw new Error('Erro ao atualizar Video')
+        }        
         }
       }
-    }, [capa]); 
-
-    async function btngravar() {
-      const token = await getCookieServer();
-      const formData = new FormData();
-    
-      formData.append('id_sistema', id_sistema);
-      formData.append('id_modulo', id_modulo);
-      formData.append('id_submodulo', id_submodulo);
-      formData.append('nome_video', nome_video);
-      formData.append('link', link);
-      formData.append('observacao', observacao);
-      formData.append('order', order);
-      if (capa) formData.append('capa', capa); // Anexando o arquivo de imagem
-    
-      try {
-        if (!id_video) {
-          // Criar novo vídeo
-          await api.post("/criarvideo", formData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data', // Importante para o multer entender
-            },
-          });
-        } else {
-          // Atualizar vídeo existente
-          formData.append('id_video', id_video);
-          await api.put("/atualizarvideo", formData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-        }
-        toast.success("Gravado com sucesso.");
-        router.push("../../cadastros/videos");
-      } catch (err) {
-        toast.error("Erro ao gravar vídeo.");
-        console.error(err);
-      }
-    }
-    
 
     const selecionarSistema = async () => {
       const filtros = {
@@ -290,10 +276,9 @@ export default function IncluirVideo() {
                 onChange={handleFile}
                />
               <br/><br/>
-              <p>{previewCapa}</p>
                {
                 previewCapa && (
-                  <img 
+                  <Image 
                     alt='Imagem capa'
                     src={previewCapa}
                     width={300}

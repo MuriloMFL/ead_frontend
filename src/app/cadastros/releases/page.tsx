@@ -20,7 +20,7 @@ export default function CadastrarReleases(){
     const filtros = {
     status : status ==='true' ? true : false,
     numero_release: numero_release,
-    finalizado: finalizado ==='true' ? finalizado : false
+    finalizado: finalizado ==='true' ? true : false
     }
     const release = await buscaDados('/listarrelease', filtros)
     setRelease(release);
