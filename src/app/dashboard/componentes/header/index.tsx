@@ -43,8 +43,8 @@ export function Header() {
                  ☰
                 </div>             
                 <nav ref={navRef} className={styles.headerNav}>
-                    <Link href="/dashboard">Dashboard</Link>
-                    {/*<Link href="/releases">Releases</Link>*/}
+                    {/*<Link href="/dashboard">Dashboard</Link>*/}
+                    <Link href="/releases">Releases</Link>
                     {/*<Link href="/aulas">Aulas</Link>*/}
                     <Link href="/videos">Videos</Link>
                     {/*<Link href="/faqs">Faqs</Link>*/}

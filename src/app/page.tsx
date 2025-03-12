@@ -44,7 +44,7 @@ export default function Home() {
       console.log(err)
     }
 
-    redirect("/dashboard")
+    redirect("/releases")
   }
 
   return (

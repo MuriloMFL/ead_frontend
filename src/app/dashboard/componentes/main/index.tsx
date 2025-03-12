@@ -1,12 +1,11 @@
 "use client"
 import estiloGlobal from "../../../page.module.scss";
 import estiloLocal from "./page.module.scss"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ReleaseProps } from "@/lib/release.type";
 import { buscaDados } from "@/servicos/buscar";
 import useUserInfo from "@/servicos/useUserInfo";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 
 export function DashboardPrincipal(){
     const [status, setStatus] = useState<string>('true')
@@ -20,6 +19,9 @@ export function DashboardPrincipal(){
     const [id_usuario, setIdUsuario] = useState<string | null>(null)
     const router = useRouter()
     const informacao_usuario = useUserInfo()
+    
+    const tentativasRef = useRef(0);
+   
 
     const handlebuscar = async () => {
         const filtros = {
@@ -73,19 +75,23 @@ export function DashboardPrincipal(){
       BuscarAulas()
     }, [qtd_aulas])
 
-    const BuscarProvas = async () => {
-        if (!informacao_usuario?.id_usuario) return;
-        
-        const filtros = {
-          id_usuario: informacao_usuario?.id_usuario
-        }
-        const provas = await buscaDados('/contarprovas', filtros)
-        setNotaProva(provas)
-    }
+    const BuscarProvas = async (idUsuario: string) => {
+      if (!idUsuario) return;
 
-    useEffect(() => {
-      BuscarProvas();
-    }, [id_usuario]);
+      const filtros = {
+          id_usuario: Number(idUsuario),
+      };
+
+      const provas = await buscaDados('/contarprovas', filtros);
+      setNotaProva(provas);
+  };
+
+  useEffect(() => {
+    if (informacao_usuario?.id_usuario) {
+        setIdUsuario(String(informacao_usuario.id_usuario));
+        BuscarProvas(informacao_usuario.id_usuario);
+    }
+}, [informacao_usuario?.id_usuario]);
 
     const handleVisualizar = (id_release : string) =>{
       document.cookie = `id_release_visualizar=${id_release}; path=/; max-age=86000`
@@ -115,14 +121,14 @@ export function DashboardPrincipal(){
                     <p className={estiloLocal.dadosrodape}>Aulas Ativas</p>
                 </div>
                 <div className={estiloLocal.amostra}>
-                    <div className={estiloLocal.tituloAmostras}><h3>Questões</h3></div>
+                    <div className={estiloLocal.tituloAmostras}><h3>Videos</h3></div>
                     <h1 className={estiloLocal.dadosAmostra}>{nota_prova}%</h1>
                     <p className={estiloLocal.dadosrodape}>de acertos</p>
                 </div>
 
                 <div className={estiloLocal.amostra}>
                     <div className={estiloLocal.tituloAmostras}><h3>Provas</h3></div>
-                    <h1 className={estiloLocal.dadosAmostra}>{nota_prova || 0}%</h1>
+                    <h1 className={estiloLocal.dadosAmostra}>{nota_prova}%</h1>
                     <p className={estiloLocal.dadosrodape}>De acertos</p>
                 </div>
 

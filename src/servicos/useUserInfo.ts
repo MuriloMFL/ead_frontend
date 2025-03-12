@@ -19,7 +19,6 @@ const useUserInfo = () => {
 
         if (cookie) {
             const userInfoValue = JSON.parse(decodeURIComponent(cookie.split("=")[1]));
-            console.log("Cookie recuperado:", userInfoValue);
             setUserInfo(userInfoValue);
         } else {
             console.log("Cookie userInfo não encontrado!");
