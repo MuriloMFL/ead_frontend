@@ -15,6 +15,8 @@ export function DashboardPrincipal(){
     const [qtd_modulos, setQtdModulos] = useState<string>('')
     const [qtd_submodulos, setQtdSubModulos] = useState<string>('')
     const [qtd_aulas, setQtdAulas] = useState<string>('')
+    const [qtd_videos, setQtdVideos] = useState<string>('')
+    const [qtd_sistemas, setQtdSistemas] = useState<string>('')
     const [nota_prova, setNotaProva] = useState<string>('')
     const [id_usuario, setIdUsuario] = useState<string | null>(null)
     const router = useRouter()
@@ -36,6 +38,21 @@ export function DashboardPrincipal(){
         handlebuscar()
     }, [])
 
+
+    const BuscarSistemas = async () => {
+      const filtros = {
+        status : true,
+      }
+      const sistemas = await buscaDados('/contarsistemas', filtros)
+      if(sistemas){
+        setQtdSistemas(sistemas)
+      }else {
+        setQtdSistemas('0')
+      }
+    }
+    useEffect ( ()=> {
+      BuscarSistemas()
+    }, [qtd_sistemas])
 
     const BuscarModulos = async () => {
       const filtros = {
@@ -75,6 +92,21 @@ export function DashboardPrincipal(){
       BuscarAulas()
     }, [qtd_aulas])
 
+    const BuscarVideos = async () => {
+      const filtros = {
+        status : true,
+      }
+      const videos = await buscaDados('/contarvideos', filtros)
+      if(videos){
+        setQtdVideos(videos)
+      }else {
+        setQtdVideos('0')
+      }
+    }
+    useEffect ( ()=> {
+      BuscarVideos()
+    }, [qtd_videos])
+
     const BuscarProvas = async (idUsuario: string) => {
       if (!idUsuario) return;
 
@@ -106,6 +138,11 @@ export function DashboardPrincipal(){
 
             <div className={estiloLocal.modulos}>
                 <div className={estiloLocal.amostra}>
+                    <div className={estiloLocal.tituloAmostras}><h3>Sistemas</h3></div>
+                    <h1 className={estiloLocal.dadosAmostra}>{qtd_sistemas}</h1>
+                    <p className={estiloLocal.dadosrodape}>Sistemas Ativos</p>
+                </div>
+                <div className={estiloLocal.amostra}>
                     <div className={estiloLocal.tituloAmostras}><h3>Modulos</h3></div>
                     <h1 className={estiloLocal.dadosAmostra}>{qtd_modulos}</h1>
                     <p className={estiloLocal.dadosrodape}>Modulos Ativos</p>
@@ -122,21 +159,28 @@ export function DashboardPrincipal(){
                 </div>
                 <div className={estiloLocal.amostra}>
                     <div className={estiloLocal.tituloAmostras}><h3>Videos</h3></div>
-                    <h1 className={estiloLocal.dadosAmostra}>{nota_prova}%</h1>
-                    <p className={estiloLocal.dadosrodape}>de acertos</p>
+                    <h1 className={estiloLocal.dadosAmostra}>{qtd_videos}</h1>
+                    <p className={estiloLocal.dadosrodape}>de Videos Ativos</p>
                 </div>
-
+                
+                {/** 
+                <div className={estiloGlobal.titulo} >
+                  <h1>Suas Estatisticas</h1>
+                </div>  
+                <br/>
                 <div className={estiloLocal.amostra}>
-                    <div className={estiloLocal.tituloAmostras}><h3>Provas</h3></div>
+                    <div className={estiloLocal.tituloAmostras}><h3>Simulados</h3></div>
                     <h1 className={estiloLocal.dadosAmostra}>{nota_prova}%</h1>
                     <p className={estiloLocal.dadosrodape}>De acertos</p>
                 </div>
+                */}
+                
+          {/*Inicio Da Release*/}
+          <div className={estiloGlobal.titulo} >
+              <h1>Release</h1>
+          </div>  
 
-                <div className={estiloGlobal.titulo} >
-                    <h1>Release</h1>
-                </div>  
-
-                <section className={estiloGlobal.grid}>
+          <section className={estiloGlobal.grid}>
           <table>
             <thead>
               <tr>
