@@ -163,18 +163,6 @@ export function DashboardPrincipal(){
                     <p className={estiloLocal.dadosrodape}>de Videos Ativos</p>
                 </div>
                 
-                {/** 
-                <div className={estiloGlobal.titulo} >
-                  <h1>Suas Estatisticas</h1>
-                </div>  
-                <br/>
-                <div className={estiloLocal.amostra}>
-                    <div className={estiloLocal.tituloAmostras}><h3>Simulados</h3></div>
-                    <h1 className={estiloLocal.dadosAmostra}>{nota_prova}%</h1>
-                    <p className={estiloLocal.dadosrodape}>De acertos</p>
-                </div>
-                */}
-                
           {/*Inicio Da Release*/}
           <div className={estiloGlobal.titulo} >
               <h1>Release</h1>
