@@ -47,7 +47,7 @@ export function Header() {
                     <Link href="/releases">Releases</Link>
                     {/*<Link href="/aulas">Aulas</Link>*/}
                     <Link href="/videos">Videos</Link>
-                    {/*<Link href="/faqs">Faqs</Link>*/}
+                    <Link href="/faqs">Documentação</Link>
                     <Link href="/provas">Simulados</Link>
 
                     <Link href="/meucadastro" className={styles.usuario}>

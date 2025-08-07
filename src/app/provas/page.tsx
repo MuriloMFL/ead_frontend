@@ -56,15 +56,6 @@ export default function Provas(){
             
             <select 
               className={estiloGlobal.inputPesquisaSelect} 
-              value={status} 
-              onChange={(e) => setStatus(e.target.value)}
-            >
-              <option value="true">Ativo</option>
-              <option value="false">Inativo</option>
-            </select>
-
-            <select 
-              className={estiloGlobal.inputPesquisaSelect} 
               value={finalizado} 
               onChange={(e) => setFinalizado(e.target.value)}
             >

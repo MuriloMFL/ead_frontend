@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.scss";
 import ClientToast from "./clientToast";
 import "react-toastify/dist/ReactToastify.css"; 
+import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,10 +27,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    
     <html lang="pt-br">
       <body className={`${geistSans.variable ?? ''} ${geistMono.variable ?? ''}`}>
       <ClientToast />
-        {children}        
+      <PrimeReactProvider>
+        {children}    
+      </PrimeReactProvider>    
       </body>
        
     </html>

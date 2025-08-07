@@ -15,6 +15,7 @@
     "@types/react-modal": "^3.16.3",
     "axios": "^1.7.9",
     "babel-polyfill": "^6.26.0",
+    "bootstrap": "^5.3.5",
     "cookies-next": "^5.0.2",
     "cors": "^2.8.5",
     "draft-js": "^0.11.7",

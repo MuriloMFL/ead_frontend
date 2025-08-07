@@ -40,6 +40,7 @@ export default function Home() {
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
     });
+    
     }catch(err: any){
       console.log(err)
     }

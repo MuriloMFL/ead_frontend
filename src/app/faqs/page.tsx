@@ -36,7 +36,7 @@ export default function Faqs(){
 
         <main className={estiloGlobal.dados}>
             <div className={estiloGlobal.titulo}>
-                <h1>FAQs</h1>
+                <h1>Documentação</h1>
             </div>
             <div className={estiloGlobal.barraFuncoes}>
          <form  onSubmit={(e) => { e.preventDefault(); handlebuscar(); }}>

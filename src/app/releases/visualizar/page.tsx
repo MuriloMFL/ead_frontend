@@ -28,14 +28,18 @@ export default function VisualizarReleaseItem() {
   const [release, setRelease] = useState<ReleaseItemProps[]>([])
 
     useEffect (() => {
-      const cookies = document.cookie
+      try {
+        const cookies = document.cookie
         .split('; ')
         .find(row => row.startsWith('id_release_visualizar='))
         ?.split('=')[1]
         setIdRelease(cookies || null);
         if(cookies){
           handlebuscar(cookies)
-        }
+        }   
+      } catch (error) {
+        console.log('id release não encontrado')
+      }
     }, [])
     
     useEffect(() => {
