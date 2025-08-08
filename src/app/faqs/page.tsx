@@ -67,7 +67,7 @@ export default function Faqs(){
             <thead>
               <tr>
                 <th scope="col">ID</th>
-                <th scope="col">FAQ</th>
+                <th scope="col">Documento</th>
                 <th scope="col">Sistema</th>
                 <th scope="col">Modulo</th>
                 <th scope="col">SubModulo</th>
